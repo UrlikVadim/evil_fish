@@ -69,7 +69,6 @@ Ext.define('App.admin.Content', {
                 { text: 'Название', dataIndex: 'name' , flex: 2},
                 { text: 'Описание', dataIndex: 'email', flex: 4 },
                 { text: 'Показан', dataIndex: 'email', flex: 1 },
-
             ],
         })
     ]
