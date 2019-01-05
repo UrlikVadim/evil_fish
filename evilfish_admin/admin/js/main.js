@@ -12,19 +12,10 @@ Ext.application({
                     defaults: {
                         styleHtmlContent: true
                     },
-
                     items: [
                         Ext.create('App.admin.Logo',{}),
-                        {
-                            title: 'Контент',
-                            iconCls: 'user',
-                            html: 'Contact Screen'
-                        },
-                        {
-                            title: 'Отзывы',
-                            iconCls: 'user',
-                            html: 'fefefefe'
-                        }
+                        Ext.create('App.admin.Content',{}),
+                        Ext.create('App.admin.Comment',{}),
                     ]
                 })
             ]
