@@ -19,12 +19,24 @@ Ext.define('App.admin.Content', {
                     itemId: 'categoryList',
                     border: true,
                     flex:2,
+                    store: Ext.create('Ext.data.Store', {
+                        autoLoad: true,
+                        fields:['id','name','vegan'],
+                        proxy: {
+                            type: 'ajax',
+                            url: '/admin/getCategory',
+                            reader: {
+                                type: 'json',
+                                rootProperty: 'data'
+                            }
+                        }
+                    }),
                     tbar:[
                         {
                             xtype: 'button',
                             text: 'Добавить',
                             itemId: 'addButton',
-                            handler: function(){
+                            handler: function(btn){
                                 Ext.create('Ext.window.Window', {
                                     title: 'Создать категорию',
                                     itemId: 'uploadimageform',
@@ -37,7 +49,7 @@ Ext.define('App.admin.Content', {
                                         {
                                             xtype: 'textfield',
                                             itemId: 'name',
-                                            fieldLabel:'название раздела',
+                                            fieldLabel:'Название раздела',
                                         },
                                         {
                                             xtype:'combo',
@@ -45,12 +57,12 @@ Ext.define('App.admin.Content', {
                                             fieldLabel:'Тип меню',
                                             valueField: 'type',
                                             displayField: 'value',
-                                            value: false,
+                                            value: 0,
                                             store: Ext.create('Ext.data.Store', {
                                                 fields: ['type', 'value'],
                                                 data : [
-                                                    {"type":false, "value": "Обычное"},
-                                                    {"type":true, "value": "Веганское"}
+                                                    {"type":0, "value": "Обычное"},
+                                                    {"type":1, "value": "Веганское"}
                                                 ]
                                             })
                                         }
@@ -58,21 +70,26 @@ Ext.define('App.admin.Content', {
                                     buttons:[
                                         {
                                             xtype:'button',
-                                            itemId: 'uploadImage',
-                                            text:'OK',
-                                            handler: function(btn){
-                                                Ext.Ajax.request({
-                                                     url: 'ajax_demo/sample.json',
+                                            text:'Добавить',
+                                            handler: function(b){
+                                               Ext.Ajax.request({
+                                                    url: '/admin/setCategory',
+                                                    method:'POST',
+                                                    params:{
+                                                        csrfmiddlewaretoken: getCookie('csrftoken'),
+                                                        typeOperation: 'add',
+                                                        name: b.up('window').getComponent('name').getValue(),
+                                                        vegan: b.up('window').getComponent('typecategory').getValue(),
+                                                    },
+                                                    success: function(response, opts) {
+                                                        btn.up('gridpanel').getStore().reload();
+                                                        Ext.Msg.alert('Ответ', 'Категория создана', Ext.emptyFn);
+                                                    },
 
-                                                     success: function(response, opts) {
-                                                         var obj = Ext.decode(response.responseText);
-                                                         console.dir(obj);
-                                                     },
-
-                                                     failure: function(response, opts) {
-                                                         console.log('server-side failure with status code ' + response.status);
-                                                     }
-                                                 });
+                                                    failure: function(response, opts) {
+                                                        Ext.Msg.alert('Ошибка', 'Категория не создана', Ext.emptyFn);
+                                                    }
+                                               });
                                             }
                                         },
                                     ]
@@ -83,28 +100,124 @@ Ext.define('App.admin.Content', {
                             xtype: 'button',
                             text: 'Изменить',
                             itemId: 'updateButton',
+                            handler: function(btn){
+                                var sel = btn.up('gridpanel').getSelectionModel().getSelection()[0];
+                                if(sel){
+                                    Ext.create('Ext.window.Window', {
+                                    title: 'Обновить категорию',
+                                    itemId: 'uploadimageform',
+                                    buttonAlign:'center',
+                                    layout: 'form',
+                                    width:'500px',
+                                    resizable:false,
+                                    modal:true,
+                                    items:[
+                                        {
+                                            xtype: 'textfield',
+                                            itemId: 'name',
+                                            fieldLabel:'Название раздела',
+                                            value: sel.get('name'),
+                                        },
+                                        {
+                                            xtype:'combo',
+                                            itemId: 'typecategory',
+                                            fieldLabel:'Тип меню',
+                                            valueField: 'type',
+                                            displayField: 'value',
+                                            value: sel.get('vegan')*1,
+                                            store: Ext.create('Ext.data.Store', {
+                                                fields: ['type', 'value'],
+                                                data : [
+                                                    {"type":0, "value": "Обычное"},
+                                                    {"type":1, "value": "Веганское"}
+                                                ]
+                                            })
+                                        }
+                                    ],
+                                    buttons:[
+                                        {
+                                            xtype:'button',
+                                            text:'Обновить',
+                                            handler: function(b){
+                                               Ext.Ajax.request({
+                                                    url: '/admin/setCategory',
+                                                    method:'POST',
+                                                    params:{
+                                                        csrfmiddlewaretoken: getCookie('csrftoken'),
+                                                        typeOperation: 'upd',
+                                                        id: sel.get('id'),
+                                                        name: b.up('window').getComponent('name').getValue(),
+                                                        vegan: b.up('window').getComponent('typecategory').getValue(),
+                                                    },
+                                                    success: function(response, opts) {
+                                                        btn.up('gridpanel').getStore().reload();
+                                                        b.up('window').close();
+                                                        Ext.Msg.alert('Ответ', 'Категория обновлена', Ext.emptyFn);
+                                                    },
+
+                                                    failure: function(response, opts) {
+                                                        Ext.Msg.alert('Ошибка', 'Категория не обновлена', Ext.emptyFn);
+                                                    }
+                                               });
+                                            }
+                                        },
+                                    ]
+                                }).show();
+                                }
+                                else{
+                                    Ext.Msg.alert('Ошибка', 'Строчка не выбрана', Ext.emptyFn);
+                                }
+                            },
                         },
                         {
                             xtype: 'button',
                             text: 'Удалить',
                             itemId: 'removeButton',
+                            handler: function(btn){
+                                var sel = btn.up('gridpanel').getSelectionModel().getSelection()[0];
+                                if(sel){
+                                    Ext.Ajax.request({
+                                        url: '/admin/setCategory',
+                                        method:'POST',
+                                        params:{
+                                            csrfmiddlewaretoken: getCookie('csrftoken'),
+                                            typeOperation: 'del',
+                                            id:sel.get('id'),
+                                        },
+                                        success: function(response, opts) {
+                                            btn.up('gridpanel').getStore().reload();
+                                            Ext.Msg.alert('Ответ', 'Категория удалена', Ext.emptyFn);
+                                        },
+
+                                        failure: function(response, opts) {
+                                            Ext.Msg.alert('Ошибка', 'Категория не удалена', Ext.emptyFn);
+                                        }
+                                    });
+                                }
+                                else{
+                                    Ext.Msg.alert('Ошибка', 'Строчка не выбрана', Ext.emptyFn);
+                                }
+                            },
                         }
                     ],
                     columns: [
                         {
                             text: 'Индекс',
-                            dataIndex: 'name',
+                            dataIndex: 'id',
                             flex: 2
                         },
                         {
                             text: 'Имя',
-                            dataIndex: 'email',
+                            dataIndex: 'name',
                             flex: 6
                         },
                         {
                             text: 'Тип',
-                            dataIndex: 'phone',
-                            flex: 4
+                            dataIndex: 'vegan',
+                            flex: 4,
+                            renderer: function(value){
+                                return value ? 'Веганское': 'Обычное';
+                            }
                         }
                     ],
                 },
@@ -121,6 +234,8 @@ Ext.define('App.admin.Content', {
                             itemId: 'addButton',
                             handler: function(btn){
                                 var editProductsModel = btn.up('gridpanel').up('panel').up('editcontent').getComponent('editProduct').getComponent('editProductFields').getViewModel();
+                                editProductsModel.set('titleProduct', 'Создание продукта');
+                                editProductsModel.set('id', '');
                                 editProductsModel.set('typecomp', 'standart');
                                 editProductsModel.set('title', '');
                                 editProductsModel.set('description', '');
@@ -149,7 +264,14 @@ Ext.define('App.admin.Content', {
                     columns: [
                         { text: 'Название', dataIndex: 'name' , flex: 2},
                         { text: 'Описание', dataIndex: 'email', flex: 4 },
-                        { text: 'Показан', dataIndex: 'email', flex: 1 },
+                        {
+                            text: 'Показан',
+                            dataIndex: 'email',
+                            flex: 1,
+                            renderer: function(value){
+                                return value ? 'Да': 'Нет';
+                            }
+                        },
                     ],
                 }
             ]
@@ -190,13 +312,16 @@ Ext.define('App.admin.Content', {
             items:[
                 {
                     xtype:'panel',
-                    title: 'Поля',
                     itemId: 'editProductFields',
                     layout: 'form',
                     border: true,
                     flex:1,
                     viewModel: {
                         data: {
+                            typeOperation:'',
+                            titlePanel:'Создание продукта',
+                            id:'',
+                            category_id:'',
                             typecomp: 'standart',
                             title: '',
                             description: '',
@@ -204,6 +329,9 @@ Ext.define('App.admin.Content', {
                             imageurl: '',
                             buttontext: 'Загрузить изображение',
                         }
+                    },
+                    bind:{
+                        title: '{titlePanel} "{title}"',
                     },
                     items:[
                         {
@@ -271,7 +399,7 @@ Ext.define('App.admin.Content', {
                                     itemId: 'uploadimageform',
                                     buttonAlign:'center',
                                     layout: 'form',
-                                    width:'500px',
+                                    width:'400px',
                                     resizable:false,
                                     modal:true,
                                     items: {
@@ -285,15 +413,15 @@ Ext.define('App.admin.Content', {
                                             xtype:'button',
                                             itemId: 'uploadImage',
                                             text:'OK',
-                                            handler: function(){
-                                                btn.up('panel').getComponent('imageurl').setValue('kek');
+                                            handler: function(b){
+                                                btn.up('panel').getViewModel().set('imageurl', 'Удалить изображение');
                                                 btn.up('panel').getViewModel().set('buttontext', 'Удалить изображение');
+                                                b.up('window').close();
                                             }
                                         },
                                     ]
                                 }).show();
                             }
-
                         },
                     ]
                 },
@@ -308,5 +436,13 @@ Ext.define('App.admin.Content', {
                 }
             ]
         }
-    ]
+    ],
+    listeners:{
+        beforeshow: function(self, e){
+            self.getComponent('tableProduct').getComponent('categoryList').getStore().reload();
+        },
+        added: function(self, parent, i, e){
+            self.getComponent('tableProduct').getComponent('categoryList').getStore().reload();
+        },
+    },
 });

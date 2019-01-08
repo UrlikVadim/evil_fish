@@ -1,15 +1,34 @@
 Ext.define('App.admin.Logo', {
     extend: 'Ext.form.Panel',
-    title: 'Редактирование главного экрана',
+    title: 'Редактирование главной страницы',
     margin:'5px',
     layout: {
                 type: 'vbox',
                 align: 'stretch'
             },
-    bbar:["->",
+    bbar:[
         {
             xtype: 'button',
             text: 'Сохранить изменения',
+            handler: function(btn){
+                Ext.Ajax.request({
+                    url: '/admin/setLogo',
+                    method:'POST',
+                    params:{
+                        csrfmiddlewaretoken: getCookie('csrftoken'),
+                        phone:  btn.up('panel').getComponent('phone').getValue(),
+                        urlvideo:  btn.up('panel').getComponent('urlvideo').getValue(),
+                        mainhtml:  btn.up('panel').getComponent('mainhtml').getValue(),
+                    },
+                    success: function(response, opts) {
+                        Ext.Msg.alert('Ответ', 'Изменения сохранены', Ext.emptyFn);
+                    },
+
+                    failure: function(response, opts) {
+                        Ext.Msg.alert('Ошибка', 'Изменения не сохранены', Ext.emptyFn);
+                    }
+                });
+            },
         }
     ],
     items: [
@@ -23,6 +42,7 @@ Ext.define('App.admin.Logo', {
         },
         {
             xtype:'textfield',
+            itemId: 'phone',
         },
         {
             xtype:'label',
@@ -34,6 +54,7 @@ Ext.define('App.admin.Logo', {
         },
         {
             xtype:'textfield',
+            itemId: 'urlvideo',
         },
         {
             xtype:'label',
@@ -45,7 +66,40 @@ Ext.define('App.admin.Logo', {
         },
         {
             xtype:'htmleditor',
+            itemId: 'mainhtml',
             flex:1,
         }
-    ]
+    ],
+    listeners:{
+        beforeshow: function(self, e){
+            Ext.Ajax.request({
+                url: '/admin/getLogo',
+                success: function(response, opts) {
+                    var obj = Ext.decode(response.responseText);
+                    self.getComponent('phone').setValue(obj.phone);
+                    self.getComponent('urlvideo').setValue(obj.urlvideo);
+                    self.getComponent('mainhtml').setValue(obj.mainhtml);
+                },
+
+                failure: function(response, opts) {
+                    console.log('server-side failure with status code ' + response.status);
+                }
+            });
+        },
+        added: function(self, parent, i, e){
+            Ext.Ajax.request({
+                url: '/admin/getLogo',
+                success: function(response, opts) {
+                    var obj = Ext.decode(response.responseText);
+                    self.getComponent('phone').setValue(obj.phone);
+                    self.getComponent('urlvideo').setValue(obj.urlvideo);
+                    self.getComponent('mainhtml').setValue(obj.mainhtml);
+                },
+
+                failure: function(response, opts) {
+                    console.log('server-side failure with status code ' + response.status);
+                }
+            });
+        },
+    },
 });
