@@ -230,7 +230,7 @@ Ext.define('App.admin.Content', {
                     tbar:[
                         {
                             xtype: 'button',
-                            text: 'Добавить',
+                            text: 'Добавить продукт',
                             itemId: 'addButton',
                             handler: function(btn){
                                 var editProductsModel = btn.up('gridpanel').up('panel').up('editcontent').getComponent('editProduct').getComponent('editProductFields').getViewModel();
@@ -247,17 +247,17 @@ Ext.define('App.admin.Content', {
                         },
                         {
                             xtype: 'button',
-                            text: 'Изменить',
+                            text: 'Изменить продукт',
                             itemId: 'updateButton',
                         },
                         {
                             xtype: 'button',
-                            text: 'Удалить',
+                            text: 'Удалить продукт',
                             itemId: 'removeButton',
                         },"->",
                         {
                             xtype: 'button',
-                            text: 'показать/скрыть',
+                            text: 'Показать/Скрыть продукт',
                             itemId: 'changeButton',
                         }
                     ],
