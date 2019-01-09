@@ -80,8 +80,37 @@ def setCategory(request):
 
 
 def setProduct(request):
-    return render(request, "login.html")
+    if request.method == "POST":
+        if request.POST['typeOperation'] == "add":
+            return HttpResponse('Продукт добавлен', content_type='text/plain')
+        elif request.POST['typeOperation'] == "upd":
+            return HttpResponse('Изменение продукта успешшно', content_type='text/plain')
+        elif request.POST['typeOperation'] == "del":
+            return HttpResponse('Удаление продукта успешшно', content_type='text/plain')
+        else:
+            return HttpResponse('Ошибка операции', content_type='text/plain', status=400)
+    else:
+        return render(request, "login.html")
 
 
 def setComments(request):
-    return render(request, "login.html")
+    if request.method == "POST":
+        if request.POST['typeOperation'] == "change":
+            idCom = int(request.POST['id'])
+            com = Comments.objects.get(pk=idCom)
+            com.visible = not com.visible
+            com.save()
+            return HttpResponse('Видимость комментария изменена', content_type='text/plain')
+        elif request.POST['typeOperation'] == "del":
+            idCom = int(request.POST['id'])
+            com = Comments.objects.get(pk=idCom)
+            com.delete()
+            return HttpResponse('Удаление комментария успешшно', content_type='text/plain')
+        elif request.POST['typeOperation'] == "delall":
+            delall = Comments.objects.filter(visible=False)
+            delall.delete()
+            return HttpResponse('Удаление всех скрытых комментариев успешшно', content_type='text/plain')
+        else:
+            return HttpResponse('Ошибка операции', content_type='text/plain', status=400)
+    else:
+        return render(request, "login.html")

@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^getComments', views.getComments),
     url(r'^setLogo', views.setLogo),
     url(r'^setCategory', views.setCategory),
+    url(r'^setComments', views.setComments),
 ]
