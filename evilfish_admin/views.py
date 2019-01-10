@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from models import Logo, Category, Product, Comments
 # Create your views here.
 
@@ -32,7 +33,10 @@ def getCategory(request):
 
 
 def getProduct(request):
-    out = list(Product.objects.filter(category=request.GET['category']).values())
+    if request.GET.get('category', None) is not None:
+        out = list(Product.objects.filter(category=request.GET['category']).values())
+    else:
+        return HttpResponse('Ошибка операции', content_type='text/plain; charset=utf-8', status=400)
     return JsonResponse({"data": out})
 
 
@@ -48,9 +52,9 @@ def setLogo(request):
         logo.urlvideo = request.POST['urlvideo']
         logo.mainhtml = request.POST['mainhtml']
         logo.save()
-        return HttpResponse('Обновление успешшно', content_type='text/plain')
+        return HttpResponse('Обновление успешшно', content_type='text/plain; charset=utf-8')
     else:
-        return render(request, "login.html")
+        return HttpResponseRedirect("/admin/login/")
 
 
 def setCategory(request):
@@ -60,37 +64,78 @@ def setCategory(request):
             newCategory.name = request.POST['name']
             newCategory.vegan = bool(int(request.POST['vegan']))
             newCategory.save()
-            return HttpResponse('Добавление успешшно', content_type='text/plain')
+            return HttpResponse('Добавление успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "upd":
             idCat = int(request.POST['id'])
             updCategory = Category.objects.get(pk=idCat)
             updCategory.name = request.POST['name']
             updCategory.vegan = bool(int(request.POST['vegan']))
             updCategory.save()
-            return HttpResponse('Обновление успешшно', content_type='text/plain')
+            return HttpResponse('Обновление успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "del":
             idCat = int(request.POST['id'])  # TODO добавить удаление фото по ссылке
             delCategory = Category.objects.get(pk=idCat)
             delCategory.delete()
-            return HttpResponse('Удаление успешшно', content_type='text/plain')
+            return HttpResponse('Удаление успешшно', content_type='text/plain; charset=utf-8')
         else:
-            return HttpResponse('Ошибка операции', content_type='text/plain', status=400)
+            return HttpResponse('Ошибка операции', content_type='text/plain; charset=utf-8', status=400)
     else:
-        return render(request, "login.html")
+        return HttpResponseRedirect("/admin/login/")
 
 
 def setProduct(request):
     if request.method == "POST":
         if request.POST['typeOperation'] == "add":
-            return HttpResponse('Продукт добавлен', content_type='text/plain')
+            categ_id = Category.objects.get(pk=int(request.POST['category_id']))
+            prod = Product()
+            prod.category = categ_id
+            prod.typecomp = request.POST['typecomp']
+            prod.title = request.POST['title']
+            prod.description = request.POST['description']
+            prod.price = request.POST['price']
+            prod.imageurl = request.POST['imageurl']
+            prod.visible = False
+            prod.save()
+            return HttpResponse('1Продукт добавлен', content_type='text/plain')
         elif request.POST['typeOperation'] == "upd":
-            return HttpResponse('Изменение продукта успешшно', content_type='text/plain')
+            idProd = int(request.POST['id'])
+            prod = Product.objects.get(pk=idProd)
+            prod.typecomp = request.POST['typecomp']
+            prod.title = request.POST['title']
+            prod.description = request.POST['description']
+            prod.price = request.POST['price']
+            prod.imageurl = request.POST['imageurl']
+            prod.save()
+            return HttpResponse('2Изменение продукта успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "del":
-            return HttpResponse('Удаление продукта успешшно', content_type='text/plain')
+            idProd = int(request.POST['id'])
+            prod = Product.objects.get(pk=idProd)
+            prod.delete()  # TODO добавить удаление фото по ссылке
+            return HttpResponse('3Удаление продукта успешшно', content_type='text/plain; charset=utf-8')
+        elif request.POST['typeOperation'] == "vis":
+            idProd = int(request.POST['id'])
+            prod = Product.objects.get(pk=idProd)
+            prod.visible = not prod.visible
+            prod.save()
+            return HttpResponse('Изменение видимости продукта успешшно', content_type='text/plain; charset=utf-8')
         else:
-            return HttpResponse('Ошибка операции', content_type='text/plain', status=400)
+            return HttpResponse('Ошибка операции', content_type='text/plain; charset=utf-8', status=400)
     else:
-        return render(request, "login.html")
+        return HttpResponseRedirect("/admin/login/")
+
+
+def setFile(request):
+    if request.method == "POST":
+        if request.POST['typeOperation'] == "add":
+
+            return HttpResponse('1Изображение загружено', content_type='text/plain; charset=utf-8')
+        elif request.POST['typeOperation'] == "del":
+
+            return HttpResponse('2Удаление изображения успешшно', content_type='text/plain; charset=utf-8')
+        else:
+            return HttpResponse('Ошибка операции', content_type='text/plain; charset=utf-8', status=400)
+    else:
+        return HttpResponseRedirect("/admin/login/")
 
 
 def setComments(request):
@@ -100,17 +145,17 @@ def setComments(request):
             com = Comments.objects.get(pk=idCom)
             com.visible = not com.visible
             com.save()
-            return HttpResponse('Видимость комментария изменена', content_type='text/plain')
+            return HttpResponse('1Видимость комментария изменена', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "del":
             idCom = int(request.POST['id'])
             com = Comments.objects.get(pk=idCom)
             com.delete()
-            return HttpResponse('Удаление комментария успешшно', content_type='text/plain')
+            return HttpResponse('2Удаление комментария успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "delall":
             delall = Comments.objects.filter(visible=False)
             delall.delete()
-            return HttpResponse('Удаление всех скрытых комментариев успешшно', content_type='text/plain')
+            return HttpResponse('Удаление всех скрытых комментариев успешшно', content_type='text/plain; charset=utf-8')
         else:
-            return HttpResponse('Ошибка операции', content_type='text/plain', status=400)
+            return HttpResponse('Ошибка операции', content_type='text/plain; charset=utf-8', status=400)
     else:
-        return render(request, "login.html")
+        return HttpResponseRedirect("/admin/login/")

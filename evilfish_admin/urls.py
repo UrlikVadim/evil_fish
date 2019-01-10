@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^setLogo', views.setLogo),
     url(r'^setCategory', views.setCategory),
     url(r'^setComments', views.setComments),
+    url(r'^setProduct', views.setProduct),
+    url(r'^setFile', views.setFile),
 ]
