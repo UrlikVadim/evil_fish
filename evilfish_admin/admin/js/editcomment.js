@@ -32,6 +32,7 @@ Ext.define('App.admin.Comment', {
                         },
                         success: function(response, opts) {
                             btn.up('gridpanel').getStore().reload();
+                            btn.setText(sel.get('visible') ? 'Показать комментарий': 'Скрыть комментарий');
                             Ext.Msg.alert('Ответ', 'Видимость комментария измененена', Ext.emptyFn);
                         },
 
@@ -130,9 +131,8 @@ Ext.define('App.admin.Comment', {
         added: function(self, parent, i, e){
             self.getStore().reload();
         },
-        select: function(self, record, index, eOpts ) {
-//            this.getComponent('changeComment').setText(record.get('visible') ? 'Показан': 'Скрыт');
-            console.log(self.up('gridpanel'));
+        rowclick: function(self, record, element, rowIndex, e, eOpts ) {
+            this.getDockedItems('toolbar[dock="top"]')[0].getComponent('changeComment').setText(record.get('visible') ? 'Скрыть комментарий': 'Показать комментарий');
         },
     },
 });
