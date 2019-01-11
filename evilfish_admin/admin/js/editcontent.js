@@ -427,6 +427,27 @@ Ext.define('App.admin.Content', {
                     itemId: 'cancelChanges',
                     text:'Отменить изменения',
                     handler: function(btn){
+                        var vm = btn.up('panel').getComponent('editProductFields').getViewModel();
+                        if(vm.get('imageurl') != '' && vm.get('typeOperation') == 'add'){
+                            Ext.Ajax.request({
+                                url: '/admin/setFile',
+                                method:'POST',
+                                params:{
+                                    csrfmiddlewaretoken: getCookie('csrftoken'),
+                                    typeOperation:'del',
+                                    imageurl: vm.get('imageurl'),
+                                },
+                                success: function(response, opts) {
+                                    vm.set('imageurl', '');
+                                    vm.set('buttontext', 'Загрузить изображение');
+                                    Ext.Msg.alert('Ответ', 'Изображение удалено', Ext.emptyFn);
+                                },
+
+                                failure: function(response, opts) {
+                                    Ext.Msg.alert('Ошибка', 'Изображение не удалено', Ext.emptyFn);
+                                }
+                            });
+                        }
                         btn.up('panel').up('editcontent').getLayout().setActiveItem(0);
                     }
                 },"->",
@@ -555,6 +576,18 @@ Ext.define('App.admin.Content', {
                                                         name:'csrfmiddlewaretoken',
                                                         value: getCookie('csrftoken'),
                                                         hidden:true,
+                                                    },
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name:'product_id',
+                                                        value: vm.get('id'),
+                                                        hidden:true,
+                                                    },
+                                                    {
+                                                        xtype: 'textfield',
+                                                        name:'change_product',
+                                                        value: vm.get('typeOperation'),
+                                                        hidden:true,
                                                     }
                                                 ],
                                             }
@@ -569,12 +602,12 @@ Ext.define('App.admin.Content', {
                                                     if (form.isValid()) {
                                                         form.submit({
                                                             success: function(form, action) {
-                                                                btn.up('panel').getViewModel().set('buttontext', 'Удалить изображение');
-                                                                Ext.Msg.alert('Ответ', action.result.msg, Ext.emptyFn);
+                                                                vm.set('buttontext', 'Удалить изображение');
+                                                                vm.set('imageurl', action.result.msg);
                                                                 b.up('window').close();
                                                             },
                                                             failure: function(form, action) {
-                                                                Ext.Msg.alert('Ответ', action.result.msg, Ext.emptyFn);
+                                                                Ext.Msg.alert('Ошибка', action.result.msg, Ext.emptyFn);
                                                             }
                                                         });
                                                     }
@@ -594,15 +627,17 @@ Ext.define('App.admin.Content', {
                                             csrfmiddlewaretoken: getCookie('csrftoken'),
                                             typeOperation:'del',
                                             imageurl: vm.get('imageurl'),
+                                            product_id:vm.get('id'),
+                                            change_product: vm.get('typeOperation'),
                                         },
                                         success: function(response, opts) {
-                                            btn.up('panel').getViewModel().set('imageurl', '');
-                                            btn.up('panel').getViewModel().set('buttontext', 'Загрузить изображение');
-                                            Ext.Msg.alert('Ответ', 'Изображение удалено', Ext.emptyFn);
+                                            vm.set('imageurl', '');
+                                            vm.set('buttontext', 'Загрузить изображение');
+                                            Ext.Msg.alert('Ответ', response.responseText, Ext.emptyFn);
                                         },
 
                                         failure: function(response, opts) {
-                                            Ext.Msg.alert('Ошибка', 'Изображение не удалено', Ext.emptyFn);
+                                            Ext.Msg.alert('Ошибка', response.responseText, Ext.emptyFn);
                                         }
                                     });
                                 }
