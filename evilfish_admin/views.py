@@ -6,6 +6,9 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from models import Logo, Category, Product, Comments
+import hashlib
+import datetime
+import os
 # Create your views here.
 
 
@@ -96,7 +99,7 @@ def setProduct(request):
             prod.imageurl = request.POST['imageurl']
             prod.visible = False
             prod.save()
-            return HttpResponse('1Продукт добавлен', content_type='text/plain')
+            return HttpResponse('Продукт добавлен', content_type='text/plain')
         elif request.POST['typeOperation'] == "upd":
             idProd = int(request.POST['id'])
             prod = Product.objects.get(pk=idProd)
@@ -106,12 +109,13 @@ def setProduct(request):
             prod.price = request.POST['price']
             prod.imageurl = request.POST['imageurl']
             prod.save()
-            return HttpResponse('2Изменение продукта успешшно', content_type='text/plain; charset=utf-8')
+            return HttpResponse('Изменение продукта успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "del":
             idProd = int(request.POST['id'])
             prod = Product.objects.get(pk=idProd)
             prod.delete()  # TODO добавить удаление фото по ссылке
-            return HttpResponse('3Удаление продукта успешшно', content_type='text/plain; charset=utf-8')
+            return HttpResponse(''
+                                'Удаление продукта успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "vis":
             idProd = int(request.POST['id'])
             prod = Product.objects.get(pk=idProd)
@@ -127,11 +131,38 @@ def setProduct(request):
 def setFile(request):
     if request.method == "POST":
         if request.POST['typeOperation'] == "add":
-
-            return HttpResponse('1Изображение загружено', content_type='text/plain; charset=utf-8')
+            if request.FILES.get('imageurl', False):
+                if request.FILES['imageurl'].name.lower().endswith('.png'):  #TODO file size
+                    nameOut = hashlib.md5(bytes(str(datetime.datetime.today()) + "evilfish"))
+                    nameOut = nameOut.hexdigest()+".png"  # TODO os.sep
+                    with open("evilfish_admin/static/images/"+nameOut, 'wb+') as destination:
+                        for chunk in request.FILES['imageurl'].chunks():
+                            destination.write(chunk)
+                    if request.POST['change_product'] == "upd":
+                        idProd = int(request.POST['product_id'])
+                        prod = Product.objects.get(pk=idProd)
+                        prod.imageurl = nameOut
+                        prod.save()
+                    return JsonResponse({"success": True, "msg": nameOut})
+                else:
+                    return JsonResponse({"success": False, "msg": "Файл не формата PNG"})
+            else:
+                return JsonResponse({"success": False, "msg": "Файл не выбран"})
         elif request.POST['typeOperation'] == "del":
-
-            return HttpResponse('2Удаление изображения успешшно', content_type='text/plain; charset=utf-8')
+            if request.POST.get('imageurl', False):
+                urlpath = "evilfish_admin/static/images/"
+                if request.POST.get('change_product') == "upd":
+                    idProd = int(request.POST['product_id'])
+                    prod = Product.objects.get(pk=idProd)
+                    prod.imageurl = ''
+                    prod.save()
+                if os.path.exists(urlpath+request.POST['imageurl']):
+                    os.remove(urlpath+request.POST['imageurl'])
+                    return HttpResponse('Удаление изображения успешшно', content_type='text/plain; charset=utf-8')
+                else:
+                    return HttpResponse('Ошибка удаления изображения не существует', content_type='text/plain; charset=utf-8')
+            else:
+                return HttpResponse('Ошибка удаления(нет имени изображения)', content_type='text/plain; charset=utf-8')
         else:
             return HttpResponse('Ошибка операции', content_type='text/plain; charset=utf-8', status=400)
     else:
@@ -145,12 +176,12 @@ def setComments(request):
             com = Comments.objects.get(pk=idCom)
             com.visible = not com.visible
             com.save()
-            return HttpResponse('1Видимость комментария изменена', content_type='text/plain; charset=utf-8')
+            return HttpResponse('Видимость комментария изменена', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "del":
             idCom = int(request.POST['id'])
             com = Comments.objects.get(pk=idCom)
             com.delete()
-            return HttpResponse('2Удаление комментария успешшно', content_type='text/plain; charset=utf-8')
+            return HttpResponse('Удаление комментария успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "delall":
             delall = Comments.objects.filter(visible=False)
             delall.delete()
