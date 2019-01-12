@@ -76,8 +76,15 @@ def setCategory(request):
             updCategory.save()
             return HttpResponse('Обновление успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "del":
-            idCat = int(request.POST['id'])  # TODO добавить удаление фото по ссылке
+            idCat = int(request.POST['id'])
             delCategory = Category.objects.get(pk=idCat)
+            products = Product.objects.filter(category=idCat)
+            for prod in products:
+                if prod.imageurl != "":
+                    urlpath = "evilfish_admin/static/images/"
+                    if os.path.exists(urlpath + prod.imageurl):
+                        os.remove(urlpath + prod.imageurl)
+                prod.delete()
             delCategory.delete()
             return HttpResponse('Удаление успешшно', content_type='text/plain; charset=utf-8')
         else:
@@ -113,7 +120,11 @@ def setProduct(request):
         elif request.POST['typeOperation'] == "del":
             idProd = int(request.POST['id'])
             prod = Product.objects.get(pk=idProd)
-            prod.delete()  # TODO добавить удаление фото по ссылке
+            if prod.imageurl != "":
+                urlpath = "evilfish_admin/static/images/"
+                if os.path.exists(urlpath+prod.imageurl):
+                    os.remove(urlpath+prod.imageurl)
+            prod.delete()
             return HttpResponse(''
                                 'Удаление продукта успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "vis":
@@ -143,7 +154,9 @@ def setFile(request):
                         prod = Product.objects.get(pk=idProd)
                         prod.imageurl = nameOut
                         prod.save()
-                    return JsonResponse({"success": True, "msg": nameOut})
+                        return JsonResponse({"success": True, "msg": nameOut, "upd": True})
+                    else:
+                        return JsonResponse({"success": True, "msg": nameOut})
                 else:
                     return JsonResponse({"success": False, "msg": "Файл не формата PNG"})
             else:
