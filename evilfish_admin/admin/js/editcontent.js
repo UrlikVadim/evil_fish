@@ -29,7 +29,7 @@ Ext.define('App.admin.Content', {
                                 type: 'json',
                                 rootProperty: 'data'
                             }
-                        }
+                        },
                     }),
                     tbar:[
                         {
@@ -186,6 +186,7 @@ Ext.define('App.admin.Content', {
                                         },
                                         success: function(response, opts) {
                                             btn.up('gridpanel').getStore().reload();
+                                            btn.up('gridpanel').up('panel').getComponent('productList').setDisabled(true);
                                             Ext.Msg.alert('Ответ', 'Категория удалена', Ext.emptyFn);
                                         },
 
@@ -225,6 +226,7 @@ Ext.define('App.admin.Content', {
 //                            this.getComponent('changeComment').setText(record.get('visible') ? 'Показан': 'Скрыт');
                             var params ={params:{category:record.get('id')}};
                             this.up('panel').getComponent('productList').setTitle('Список продуктов "'+record.get('name')+' ('+(record.get('vegan')?'Веганское':'Обычное')+')"');
+                            this.up('panel').getComponent('productList').setDisabled(false);
                             this.up('panel').getComponent('productList').getStore().reload(params);
                         },
                     },
@@ -234,6 +236,7 @@ Ext.define('App.admin.Content', {
                     title:"Список продуктов",
                     itemId: 'productList',
                     border: true,
+                    disabled: true,
                     flex:4,
                     store: Ext.create('Ext.data.Store', {
                         autoLoad: true,
@@ -447,6 +450,10 @@ Ext.define('App.admin.Content', {
                                     Ext.Msg.alert('Ошибка', 'Изображение не удалено', Ext.emptyFn);
                                 }
                             });
+                        }
+                        if(vm.get('typeOperation') == 'upd'){
+                            var sel = btn.up('panel').up('editcontent').getComponent('tableProduct').getComponent('productList').getSelectionModel().getSelection()[0];
+                            sel.set('imageurl', vm.get('imageurl'));
                         }
                         btn.up('panel').up('editcontent').getLayout().setActiveItem(0);
                     }
