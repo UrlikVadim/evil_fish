@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
+from datetime import datetime
 # Create your models here.
 
 
@@ -34,6 +34,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     category = models.ForeignKey("Category")
+    typecomp = models.CharField(max_length=10, default='standart')
     title = models.TextField()
     description = models.TextField()
     price = models.TextField()
@@ -49,6 +50,8 @@ class Comments(models.Model):
     comment = models.TextField()
     email = models.EmailField()
     visible = models.BooleanField()
+    confirm = models.BooleanField(default=False)
+    addtime = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

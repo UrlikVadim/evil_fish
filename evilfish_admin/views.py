@@ -9,15 +9,10 @@ from models import Logo, Category, Product, Comments
 import hashlib
 import datetime
 import os
-# Create your views here.
 
 
 def index(request):
     return render(request, "admin.html")
-
-
-def login(request):
-    return render(request, "login.html")
 
 
 def getLogo(request):
