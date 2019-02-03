@@ -2,6 +2,8 @@ Ext.define('App.admin.Logo', {
     extend: 'Ext.form.Panel',
     title: 'Редактирование главной страницы',
     margin:'5px',
+    GET_LOGO: null,
+    SET_LOGO: null,
     layout: {
                 type: 'vbox',
                 align: 'stretch'
@@ -12,7 +14,7 @@ Ext.define('App.admin.Logo', {
             text: 'Сохранить изменения',
             handler: function(btn){
                 Ext.Ajax.request({
-                    url: '/admin/setLogo',
+                    url: btn.up('panel').SET_LOGO,
                     method:'POST',
                     params:{
                         csrfmiddlewaretoken: getCookie('csrftoken'),
@@ -73,7 +75,7 @@ Ext.define('App.admin.Logo', {
     listeners:{
         beforeshow: function(self, e){
             Ext.Ajax.request({
-                url: '/admin/getLogo',
+                url: self.GET_LOGO,
                 success: function(response, opts) {
                     var obj = Ext.decode(response.responseText);
                     self.getComponent('phone').setValue(obj.phone);
@@ -88,7 +90,7 @@ Ext.define('App.admin.Logo', {
         },
         added: function(self, parent, i, e){
             Ext.Ajax.request({
-                url: '/admin/getLogo',
+                url: self.GET_LOGO,
                 success: function(response, opts) {
                     var obj = Ext.decode(response.responseText);
                     self.getComponent('phone').setValue(obj.phone);

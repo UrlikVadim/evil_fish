@@ -186,6 +186,7 @@ Ext.define('App.admin.Content', {
                                         },
                                         success: function(response, opts) {
                                             btn.up('gridpanel').getStore().reload();
+                                            btn.up('gridpanel').up('panel').getComponent('productList').setTitle("Выберете категорию чтобы посмотреть список продуктов");
                                             btn.up('gridpanel').up('panel').getComponent('productList').setDisabled(true);
                                             Ext.Msg.alert('Ответ', 'Категория удалена', Ext.emptyFn);
                                         },
@@ -210,7 +211,10 @@ Ext.define('App.admin.Content', {
                         {
                             text: 'Имя',
                             dataIndex: 'name',
-                            flex: 6
+                            flex: 6,
+                            renderer: function(value){
+                                return '<b style="color: black;">'+value+'</b>';
+                            }
                         },
                         {
                             text: 'Тип',
@@ -233,7 +237,7 @@ Ext.define('App.admin.Content', {
                 },
                 {
                     xtype:'gridpanel',
-                    title:"Список продуктов",
+                    title:"Выберете категорию чтобы посмотреть список продуктов",
                     itemId: 'productList',
                     border: true,
                     disabled: true,
@@ -365,14 +369,25 @@ Ext.define('App.admin.Content', {
                         }
                     ],
                     columns: [
-                        { text: 'Название', dataIndex: 'title' , flex: 2},
-                        { text: 'Описание', dataIndex: 'description', flex: 4},
+                        {
+                            text: 'Название',
+                            dataIndex: 'title',
+                            flex: 2,
+                            renderer: function(value){
+                                return '<b style="color: blue;">'+value+'</b>';
+                            }
+                        },
+                        {
+                            text: 'Описание',
+                            dataIndex: 'description',
+                            flex: 4,
+                        },
                         {
                             text: 'Показан',
                             dataIndex: 'visible',
                             flex: 1,
                             renderer: function(value){
-                                return value ? 'Да': 'Нет';
+                                return value ? '<b style="color: green;">Да</b>': '<b style="color: red;">Нет</b>';
                             }
                         },
                     ],

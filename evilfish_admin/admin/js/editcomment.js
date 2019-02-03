@@ -108,19 +108,35 @@ Ext.define('App.admin.Comment', {
         {
             text: 'Имя',
             dataIndex: 'name',
-            flex: 3
+            flex: 2,
+            renderer: function(value){
+                return '<b style="color: black;">'+value+'</b>';
+            }
         },
         {
             text: 'Почта',
             dataIndex: 'email',
-            flex: 3
+            flex: 2
+        },
+        {
+            text: 'Время добавления',
+            dataIndex: 'addtime',
+            flex: 2
+        },
+        {
+            text: 'Состояние',
+            dataIndex: 'confirm',
+            flex: 2,
+            renderer: function(value){
+                return value ? '<b style="color: green;">Подтверждён</b>': '<b style="color: red;">Не подтверждён</b>';
+            }
         },
         {
             text: 'Видимость',
             dataIndex: 'visible',
             flex: 1,
             renderer: function(value){
-                return value ? 'Показан': 'Скрыт';
+                return value ? '<b style="color: blue;">Показан</b>': '<b>Скрыт</b>';
             }
         }
     ],
