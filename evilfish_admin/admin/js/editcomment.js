@@ -77,7 +77,7 @@ Ext.define('App.admin.Comment', {
         },"->",
         {
             xtype: 'button',
-            text: 'Удалить все скрытые комментарии',
+            text: 'Удалить все не подтвержденные комментарии',
             handler:function(btn){
                 Ext.Ajax.request({
                     url: '/admin/setComments',
