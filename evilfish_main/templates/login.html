@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Войти</title>
+    <style>
+       p {
+            font-size: 150%;
+            text-align:center;
+            margin-top:1%;
+            margin-bottom:1%;
+       }
+       b{
+            text-shadow: 0 0 0.1em blue;
+       }
+       #enter{
+            width: 50%;
+            margin:auto;
+            margin-top:6%;
+            border: 1px solid blue;
+            border-radius: 8px;
+            color:white;
+            background-color:blue;
+       }
+       #enter:hover{
+            cursor:pointer;
+            color:blue;
+            background-color:white;
+       }
+       #key{
+            display: none;
+       }
+       html{
+            font-family: Verdana, sans-serif;
+            color: #0000cc;
+            background: gray;
+            overflow : hidden;
+            height: 100%;
+            width: 100%;
+       }
+       form{
+            margin:auto;
+            margin-top:6%;
+            padding:2%;
+            border: 1px solid gray;
+            border-radius: 8px;
+            -webkit-box-shadow: 0px 0px 18px 3px rgba(0,0,0,0.47);
+            -moz-box-shadow: 0px 0px 18px 3px rgba(0,0,0,0.47);
+            box-shadow: 0px 0px 18px 3px rgba(0,0,0,0.47);
+            background: #eeeeee;
+            overflow : hidden;
+
+            width: 30%;
+       }
+       input{
+            margin-bottom:2%;
+            border: 1px solid blue;
+            border-radius: 3px;
+            color:blue;
+            font-size: 150%;
+            width: 100%;
+       }
+    </style>
+</head>
+<body>
+    <form name="auth">
+        <p><b>Панель администратора</b></p>
+        <div>
+            {% csrf_token %}
+            Логин<br />
+            <input type="text" name="login" required><br />
+            Пароль<br />
+            <input type="password" name="pass">
+            <div id="key">
+                Ключ с почты<br />
+                <input type="text" name="key">
+            </div>
+        </div>
+        <div id="enter" onclick="Send()"><p><b>Войти</b></p></div>
+    </form>
+    <script>
+        function getCookie(name) {
+            var matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+        function Send(){
+            var formData = new FormData(document.forms.auth);
+            formData.append("csrfmiddlewaretoken", getCookie('csrftoken'));
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/login", false);
+            xhr.send(formData);
+            if (xhr.status == 500) {
+                alert("Ошибка сервера");
+            }
+            else{
+                if (xhr.status == 202) {
+                    document.getElementById("key").style.display = "block";
+                    alert("Сервер отправил вам ключ для подтверждения входа");
+                }
+                else{
+                    if (xhr.status == 303) {
+                        window.location.assign(xhr.responseText);
+                    }
+                    else{
+                        alert("Неверный логин или пароль");
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

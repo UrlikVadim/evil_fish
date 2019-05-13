@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Спам</title>
+    <style>
+       P {
+            font-family: Verdana, sans-serif;
+            color: #555555;
+            font-size: 300%;
+            text-align:center;
+            text-shadow: 1px 1px 2px black;
+       }
+
+       html{
+            box-shadow: inset 0em 0em 0.5em 0.1em black;
+            background: linear-gradient(to right, gray, #eeeeee);
+            overflow : hidden;
+            height: 100%;
+            width: 100%;
+       }
+    </style>
+</head>
+<body>
+<p><b style="color:red;">ЗАЩИТА ОТ СПАМ АТАКИ</b></p>
+<p>Вы совершили слишком много запросов на "{{time.path}}"</p>
+<p>Дождитесь окончания времени и можете продолжить пользоваться сайтом</p>
+<p id="time"></p>
+
+<script>
+    var timeout = new Date({{time.year}},{{time.month}},{{time.day}},{{time.hour}},{{time.minute}},{{time.second}});
+    var curr = new Date({{curr.year}},{{curr.month}},{{curr.day}},{{curr.hour}},{{curr.minute}},{{curr.second}});
+    function check() {
+        idEl = document.getElementById('time');
+        if (timeout > curr){
+            var out = new Date(timeout - curr);
+            idEl.innerHTML = out.toTimeString();
+        }
+        else{
+            window.location = '/';
+        }
+    }
+    check();
+    setInterval(check , 1000);
+</script>
+</body>
+</html>

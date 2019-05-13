@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Evilfish</title>
+    {% load static %}
+    <link rel="stylesheet" href="static/desk.css">
+    <script type="text/javascript" src="static/jquery-3.3.1.min.js"></script>
+
+
+</head>
+<body>
+    <div id="toolbar">
+        <div class="menu-button menu-button-clicked" data-offset="0">Главная</div>
+        <div class="menu-button" data-offset="-100%">Обычное меню</div>
+        <div class="menu-button" data-offset="-200%">Веганское меню</div>
+        <div class="menu-button" data-offset="-300%">Отзывы</div>
+        <div></div>
+        <div id="menu-element">{{logo.phones}}</div>
+    </div>
+    <div id="main-window">
+        <div style="height:7%;background: gray;"></div>
+        <div id="main-background">
+            {% if logo.urlvideo != "" %}
+            <div id="video-background">
+                <div id="video-foreground">
+                    <iframe src="http://www.youtube.com/embed/{{logo.urlvideo}}?playlist={{logo.urlvideo}}&controls=0&showinfo=0&rel=0&autoplay=1&loop=1&mute=1" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <script>
+            if(/Android|webOS|iPhone|iPad|iPod|pocket|psp|kindle|avantgo|blazer|midori|Tablet|Palm|maemo|plucker|phone|BlackBerry|symbian|IEMobile|mobile|ZuneWP7|Windows Phone|Opera Mini/i.test(navigator.userAgent)) {
+                document.getElementById('main-background').innerHTML = "";
+            }
+            </script>
+            {% endif %}
+        </div>
+        <div id="slide-block"><!--
+            --><div class="content-page" data-id="1">
+                    <div style="margin:auto;width:30%">
+                        <img src="static/logo.png" width="100%">
+                    </div>
+                    {% autoescape off %}
+                        {{logo.mainhtml}}
+                    {% endautoescape %}
+                </div><!--
+            --><div class="content-page" data-id="2">
+                    <div class="categ">
+                        <div data-vegan="0">
+                        {% for cat in categ %}
+                            {% if not cat.vegan %}
+                            <div class="categ-item" data-id="{{cat.id}}">
+                               {{ cat.name }}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    </div>
+                    <div class="product-view">
+
+                    </div>
+                </div><!--
+            --><div class="content-page" data-id="3">
+                    <div class="categ">
+                        <div data-vegan="1">
+                        {% for cat in categ %}
+                            {% if cat.vegan %}
+                            <div class="categ-item" data-id="{{cat.id}}">
+                               {{ cat.name }}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    </div>
+                    <div class="product-view">
+
+                    </div>
+                </div><!--
+            --><div class="content-page" data-id="4">
+                {% if comments|length == 0 %}
+                    <h1 style="text-align:center;padding:1%">Отзывов пока нет </h1>
+                {% else %}
+                    {% for comm in comments %}
+                    <div class="comment-block">
+                        <h1>{{ comm.name }}</h1>
+                        <pre>{{ comm.comment }}</pre>
+                        <h2 style="text-align:right">{{ comm.addtime|date:"d.m.Y" }}</h2>
+                    </div>
+                    {% endfor %}
+                    {% if not commented%}
+                        <div style="height:10%"></div>
+                    {% else %}
+                        <div style="height:2%"></div>
+                    {% endif %}
+                {% endif %}
+                </div><!---->
+                 {% if not commented%}
+                 <form id="comment-form" name="commentform">
+                    <div id="comment-form-close">X</div>
+                    <div style="height:1%"></div>
+                    <div id="form-text-head">Написать отзыв</div>
+                    {% csrf_token %}
+                    <div class="form-text"><div>Имя</div></div>
+                    <input name="name" type="text" required>
+                    <div class="form-text"><div>Почта</div></div>
+                    <input name="email"  type="email" required pattern="[A-Za-zА-Яа-яЁё0-9]{2,}@[A-Za-zА-Яа-яЁё0-9]{2,}.[A-Za-zА-Яа-яЁё0-9]{2,}">
+                    <div class="form-text"><div>Отзыв</div></div>
+                    <textarea name="comment"></textarea>
+                    <div class="form-text"><div>Текст с изображения</div></div>
+                    <div id="captcha-block">
+                        <input name="captcha" type="text" required>
+                        <img id="captcha-image" src="/getcaptcha" height="100%">
+                        <img id="captcha-refresh" src="static/refresh.png" height="100%">
+                    </div>
+                    <div style="height:2%"></div>
+                    <div class="form-button"><div id="comment-send">Отправить</div></div>
+                </form>
+                 <script type="text/javascript" src="static/comment_form.js"></script>
+                {% endif %}
+        <!----></div>
+    </div>
+    <script type="text/javascript" src="static/main.js"></script>
+</body>
+</html>
