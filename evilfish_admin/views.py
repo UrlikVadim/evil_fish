@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from models import Logo, Category, Product, Comments
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import hashlib
 import datetime
 import os
@@ -138,12 +139,29 @@ def setFile(request):
     if request.method == "POST":
         if request.POST['typeOperation'] == "add":
             if request.FILES.get('imageurl', False):
-                if request.FILES['imageurl'].name.lower().endswith('.png'):  #TODO file size
+                if request.FILES['imageurl'].name.lower().endswith('.png'):
                     nameOut = hashlib.md5(bytes(str(datetime.datetime.today()) + "evilfish"))
-                    nameOut = nameOut.hexdigest()+".png"  # TODO os.sep
-                    with open("evilfish_admin/static/images/"+nameOut, 'wb+') as destination:
-                        for chunk in request.FILES['imageurl'].chunks():
-                            destination.write(chunk)
+                    nameOut = nameOut.hexdigest()+".png"
+                    path = os.sep.join(["D:","develop","evilfish","evilfish_project","evilfish_admin", "static", "images", nameOut])
+                    with open(path, 'wb+') as destination:
+                        destination.write(request.FILES['imageurl'].read())
+                    img = Image.open(path)
+                    width, height = img.size
+                    if height >= width:
+                        new_width = int(round(height * 1.6, 0))
+                        new_height = height
+                    else:
+                        new_width = width
+                        new_height = int(round(width / 1.6, 0))
+                    new_img = Image.new('RGBA', (new_width, new_height))
+                    if height >= width:
+                        new_img.paste(img, (int(round((new_width-width)/2, 0)), 0))
+                    else:
+                        new_img.paste(img, (0, int(round((new_height-height)/2, 0))))
+                    img.close()
+                    new_img = new_img.resize((800, 500), Image.ANTIALIAS)
+                    new_img.save(path)
+                    new_img.close()
                     if request.POST['change_product'] == "upd":
                         idProd = int(request.POST['product_id'])
                         prod = Product.objects.get(pk=idProd)
@@ -158,14 +176,15 @@ def setFile(request):
                 return JsonResponse({"success": False, "msg": "Файл не выбран"})
         elif request.POST['typeOperation'] == "del":
             if request.POST.get('imageurl', False):
-                urlpath = "evilfish_admin/static/images/"
+                path = os.sep.join(
+                    ["D:", "develop", "evilfish", "evilfish_project", "evilfish_admin", "static", "images", request.POST['imageurl']])
                 if request.POST.get('change_product') == "upd":
                     idProd = int(request.POST['product_id'])
                     prod = Product.objects.get(pk=idProd)
                     prod.imageurl = ''
                     prod.save()
-                if os.path.exists(urlpath+request.POST['imageurl']):
-                    os.remove(urlpath+request.POST['imageurl'])
+                if os.path.exists(path):
+                    os.remove(path)
                     return HttpResponse('Удаление изображения успешшно', content_type='text/plain; charset=utf-8')
                 else:
                     return HttpResponse('Ошибка удаления изображения не существует', content_type='text/plain; charset=utf-8')
@@ -183,6 +202,7 @@ def setComments(request):
             idCom = int(request.POST['id'])
             com = Comments.objects.get(pk=idCom)
             com.visible = not com.visible
+            com.confirm = True
             com.save()
             return HttpResponse('Видимость комментария изменена', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "del":
@@ -191,7 +211,7 @@ def setComments(request):
             com.delete()
             return HttpResponse('Удаление комментария успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "delall":
-            delall = Comments.objects.filter(visible=False)
+            delall = Comments.objects.filter(confirm=False)
             delall.delete()
             return HttpResponse('Удаление всех скрытых комментариев успешшно', content_type='text/plain; charset=utf-8')
         else:
