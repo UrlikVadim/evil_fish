@@ -3,6 +3,25 @@ var CURRENT_WINDOW = $('#toolbar').children()[0];
 var SELECTED_CATEG = $('.categ > div')[0].firstElementChild;
 var SELECTED_CATEG_VEGAN = $('.categ > div')[1].firstElementChild;
 
+function fetchProduct(id, vegan){
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/getproduct/'+id, true);
+    xhr.onreadystatechange = function() {
+        if (this.readyState != 4){
+            return;
+        }
+        if (xhr.status == 200) {
+            var prod_view = document.getElementsByClassName('product-view');
+            prod_view = (vegan) ? prod_view[1] : prod_view[0];
+            prod_view.innerHTML = this.responseText;
+        } else {
+            alert(this.responseText);
+        }
+
+    }
+    xhr.send();
+}
+
 window.onload = function(){
     // обработчик выбора вкладок
     $('#toolbar').click(function(e){
@@ -34,6 +53,7 @@ window.onload = function(){
             else{
                 SELECTED_CATEG = e.target;
             }
+            fetchProduct(e.target.dataset.id, 1*this.dataset.vegan);
         }
 
     });

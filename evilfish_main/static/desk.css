@@ -103,6 +103,7 @@ body{
     width: 100%;
     z-index:1;
     background-color:white;
+    overflow: hidden;
 }
 #main-background{
     position: absolute;
