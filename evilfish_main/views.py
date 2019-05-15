@@ -7,7 +7,7 @@ from django.apps import apps
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from datetime import datetime ,timedelta
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import hashlib
@@ -208,7 +208,7 @@ def sendcomment(request):
     else:
         return HttpResponse('Вы уже оставляли отзыв', status=400, content_type='text/plain; charset=utf-8')
 
-
+@csrf_exempt
 def getproduct(request, pk=None):
     if pk is not None:
         out = list(Product.objects.filter(category=pk, visible=True).values())
