@@ -3,6 +3,19 @@ var CURRENT_WINDOW = $('#toolbar').children()[0];
 var SELECTED_CATEG = $('.categ > div')[0].firstElementChild;
 var SELECTED_CATEG_VEGAN = $('.categ > div')[1].firstElementChild;
 
+window.alert = function(msg){
+    document.getElementById("message-box-inner").innerHTML = msg.toString();
+    $('#disable-win').css('display', 'block');
+    $('#message-box').animate(
+    {
+        top: '25%'
+    },
+    300,
+    function(){
+
+    });
+}
+
 function fetchProduct(id, vegan){
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/getproduct/'+id, true);
@@ -57,6 +70,10 @@ window.onload = function(){
         }
 
     });
-    $(SELECTED_CATEG).click();
+    //$(SELECTED_CATEG).click();
     $(SELECTED_CATEG_VEGAN).click();
+    $('#message-box-close').click(function(e){
+        $('#disable-win').css('display', 'none');
+        $('#message-box').css('top', '-55%');
+    });
 }

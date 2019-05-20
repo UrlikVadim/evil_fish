@@ -53,8 +53,60 @@ body{
     pointer-events: none;
 }
 /*--------------------------------------------*/
+#disable-win{
+    position: fixed;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    display: none;
+    z-index:10;
+    background: rgba(0,0,0,0.9);
+}
+#message-box{
+    position: relative;
+    overflow: hidden;
+    left: 25%;
+    top: -55%;
+
+    width: 50%;
+    z-index:10;
+    text-align: center;
+    font-size: 4vh;
+    color: #474747;
+    border-radius: 3px;
+    background: rgba(222,222,222,0.9);
+}
+#message-box-inner{
+    min-height: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /*Центрирование по горизонтали*/
+    align-items: center;
+}
+#message-box-close{
+    cursor:pointer;
+    position: relative;
+    overflow: hidden;
+    left: 25%;
+    bottom: 1vh;
+    height: 5vh;
+    width: 50%;
+    display: block;
+    z-index:10;
+    text-align: center;
+    border-radius: 3px;
+    font-size: 4vh;
+    color: #474747;
+    text-shadow: 1px 1px 1px #bbbbbb;
+    font-weight: 600;
+    background: rgb(111,111,111);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.47);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.47);
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.47);
+}
+/*--------------------------------------------*/
 #toolbar{
-    position:fixed;
+    position:absolute;
     overflow: hidden;
     height: 7%;
     width: 100%;
@@ -276,7 +328,7 @@ textarea{
         box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.47);
     }
 }
-#comment-send:hover{
+#comment-send:hover, #message-box-close:hover{
     animation: buthover 0.2s ease-out;
     animation-fill-mode: forwards;
 }
@@ -373,10 +425,11 @@ textarea{
 
 .product-view{
     position:absolute;
+    white-space: normal;
     top:0;
     left:22%;
-    width:78%;
-    height:100%;
+    width:78vw;
+    height:93vh;
     overflow:auto;
     background: RGBA(186,186,186, 0.5);
 }
