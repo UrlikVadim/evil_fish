@@ -67,7 +67,7 @@ body{
     overflow: hidden;
     left: 25%;
     top: -55%;
-
+    padding:1%;
     width: 50%;
     z-index:10;
     text-align: center;
@@ -87,8 +87,8 @@ body{
     cursor:pointer;
     position: relative;
     overflow: hidden;
-    left: 25%;
-    bottom: 1vh;
+    margin: auto;
+    margin-top: 1vh;
     height: 5vh;
     width: 50%;
     display: block;

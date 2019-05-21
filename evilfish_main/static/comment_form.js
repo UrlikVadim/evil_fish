@@ -41,8 +41,20 @@ document.getElementById("captcha-image").onload = document.getElementById("captc
 var SENDING_COMMENT = false;
 $('#comment-send').click(function(e){
     if(!SENDING_COMMENT){
-        SENDING_COMMENT = true;
         var formData = new FormData(document.forms.commentform);
+        if(formData.get('name') == ''){
+            alert('Имя не может быть пустым',true);
+            return false;
+        }
+        if(formData.get('email') == ''){
+            alert('Почта не может быть пустым',true);
+            return false;
+        }
+        if(formData.get('comment') == ''){
+            alert('Отзыв не может быть пустым',true);
+            return false;
+        }
+        SENDING_COMMENT = true;
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/sendcomment', true);
         document.getElementById("form-text-head").innerHTML = 'Отправка отзыва...';
@@ -84,7 +96,7 @@ $('#comment-send').click(function(e){
                     },
                     200,
                     function(){
-                        alert(xhr.responseText);
+                        alert(xhr.responseText, true);
                         $('#comment-form-close').css('visibility', 'visible');
                     }
                 );

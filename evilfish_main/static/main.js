@@ -3,8 +3,13 @@ var CURRENT_WINDOW = $('#toolbar').children()[0];
 var SELECTED_CATEG = $('.categ > div')[0].firstElementChild;
 var SELECTED_CATEG_VEGAN = $('.categ > div')[1].firstElementChild;
 
-window.alert = function(msg){
-    document.getElementById("message-box-inner").innerHTML = msg.toString();
+window.native_alert = window.alert;
+window.alert = function(msg, error){
+    if(error){
+        document.getElementById("message-box-inner").innerHTML = '<b>Ошибка</b>' + msg.toString();
+    }else{
+        document.getElementById("message-box-inner").innerHTML = msg.toString();
+    }
     $('#disable-win').css('display', 'block');
     $('#message-box').animate(
     {
@@ -15,6 +20,16 @@ window.alert = function(msg){
 
     });
 }
+$('#message-box-close').click(function(e){
+    $('#message-box').animate(
+        {
+            top: '-55%'
+        },
+        200,
+        function(){
+            $('#disable-win').css('display', 'none');
+        });
+});
 
 function fetchProduct(id, vegan){
     var xhr = new XMLHttpRequest();
@@ -28,7 +43,7 @@ function fetchProduct(id, vegan){
             prod_view = (vegan) ? prod_view[1] : prod_view[0];
             prod_view.innerHTML = this.responseText;
         } else {
-            alert(this.responseText);
+            alert(this.responseText, true);
         }
 
     }
@@ -72,8 +87,5 @@ window.onload = function(){
     });
     //$(SELECTED_CATEG).click();
     $(SELECTED_CATEG_VEGAN).click();
-    $('#message-box-close').click(function(e){
-        $('#disable-win').css('display', 'none');
-        $('#message-box').css('top', '-55%');
-    });
+
 }
