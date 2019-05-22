@@ -5,6 +5,7 @@ var SELECTED_CATEG_VEGAN = $('.categ > div')[1].firstElementChild;
 
 window.native_alert = window.alert;
 window.alert = function(msg, error){
+    msg = msg ? msg : 'Сервер не отвечает';
     if(error){
         document.getElementById("message-box-inner").innerHTML = '<b>Ошибка</b>' + msg.toString();
     }else{
