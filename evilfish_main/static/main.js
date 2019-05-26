@@ -33,6 +33,8 @@ $('#message-box-close').click(function(e){
 });
 
 function fetchProduct(id, vegan){
+    var prod_view = document.getElementsByClassName('product-view');
+    prod_view = (vegan) ? prod_view[1] : prod_view[0];
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/getproduct/'+id, true);
     xhr.onreadystatechange = function() {
@@ -40,14 +42,14 @@ function fetchProduct(id, vegan){
             return;
         }
         if (xhr.status == 200) {
-            var prod_view = document.getElementsByClassName('product-view');
-            prod_view = (vegan) ? prod_view[1] : prod_view[0];
             prod_view.innerHTML = this.responseText;
         } else {
+            prod_view.innerHTML = '';
             alert(this.responseText, true);
         }
 
     }
+    prod_view.innerHTML = '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
     xhr.send();
 }
 
