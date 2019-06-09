@@ -11,21 +11,37 @@
             margin-bottom:1%;
        }
        b{
-            text-shadow: 0 0 0.1em blue;
+            color: #454545;
        }
        #enter{
             width: 50%;
             margin:auto;
             margin-top:6%;
-            border: 1px solid blue;
+            border: 1px solid gray;
             border-radius: 8px;
-            color:white;
-            background-color:blue;
+            color: #454545;
+            text-shadow: 1px 1px 1px #bbbbbb;
+            background: gray;
+            border-radius:5px;
+            -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.47);
+            -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.47);
+            box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.47);
        }
+       @keyframes buthover {
+            0% {}
+            100%{
+                color: #303030;
+
+                -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.47);
+                -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.47);
+                box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.47);
+            }
+        }
        #enter:hover{
+            animation: buthover 0.2s ease-out;
+            animation-fill-mode: forwards;
+            text-shadow: 0px 0px 0px #bbbbbb !important;
             cursor:pointer;
-            color:blue;
-            background-color:white;
        }
        #key{
             display: none;
@@ -39,6 +55,7 @@
             width: 100%;
        }
        form{
+             color: #454545;
             margin:auto;
             margin-top:6%;
             padding:2%;
@@ -54,9 +71,9 @@
        }
        input{
             margin-bottom:2%;
-            border: 1px solid blue;
+            border: 1px solid #555555;
             border-radius: 3px;
-            color:blue;
+            color:#555555;
             font-size: 150%;
             width: 100%;
        }
