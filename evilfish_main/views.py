@@ -26,17 +26,19 @@ Admins = apps.get_model('evilfish_admin', 'Admins')
 
 
 def index(request):
-    comm = []
+    comments = []
     categ = []
     try:
-        comm = Comments.objects.filter(visible=True)
+        comments = Comments.objects.filter(visible=True)
         categ = Category.objects.all()
     except:
         pass
+    for comm in comments:
+        comm.comment = comm.comment.split('\n')
     context = {
         'logo': Logo.objects.get(pk=1),
         'categ': categ,
-        'comments': comm,
+        'comments': comments,
         'commented': request.session.get('sendcomm', False)
     }
     return render(request, "index.html", context)
@@ -188,7 +190,7 @@ def login(request):
 def sendcomment(request):
     if request.method == 'POST' and not request.session.get('sendcomm', False):
         cap = request.session.get('captcha', None)
-        if cap is not None and request.POST['captcha'] == cap.upper() and request.POST['captcha'] != '':
+        if cap is not None and request.POST['captcha'].upper() == cap.upper() and request.POST['captcha'] != '':
             if re.match(r'[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+', request.POST['email']) and request.POST['name'] != '' and request.POST['comment'] != '':
                 comm = Comments()
                 comm.name = request.POST['name']
