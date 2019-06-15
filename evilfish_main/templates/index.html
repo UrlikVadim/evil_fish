@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="static/desk.css">
     <script type="text/javascript" src="static/jquery-3.3.1.min.js"></script>
 
-
 </head>
 <body>
     <div id="disable-win">
@@ -92,7 +91,13 @@
                     {% for comm in comments %}
                     <div class="comment-block">
                         <h1>{{ comm.name }}</h1>
-                        <pre>{{ comm.comment }}</pre>
+                        <hr>
+                        <pre>
+                            {% for text in comm.comment %}
+                            {{ text }}<br>
+                            {% endfor %}
+                        </pre>
+                        <hr>
                         <h2 style="text-align:right">{{ comm.addtime|date:"d.m.Y" }}</h2>
                     </div>
                     {% endfor %}
