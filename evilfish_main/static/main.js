@@ -53,6 +53,59 @@ function fetchProduct(id, vegan){
     xhr.send();
 }
 
+function custom_sorted(arr){ //rework
+    function ev(num){
+        return num > elem;
+    }
+    const MAX_EL = 4;
+    var old_arr = arr.slice(0, arr.length).reverse();
+    var out = [];
+    var inter_arr = [];
+    var k = 0;
+    var i = 0;
+    var elem = null;
+    while(old_arr.length || inter_arr.length){
+        i++;
+        if(i > 1000){OUTPUT.innerHTML +='<hr>BREAK<hr>';break;}
+        while(inter_arr.length){
+
+            if(k + inter_arr[inter_arr.length - 1] <= MAX_EL){
+                elem = inter_arr.pop();
+                out.push(elem);
+                k += elem;
+                k = k == MAX_EL ? 0: k;
+                if(k == 0){
+                    OUTPUT.innerHTML += '[ '+out.join(' , ')+' ]<br>';
+                }
+            }
+            else{
+                break;
+            }
+        }
+        if(old_arr.length){
+            elem = old_arr.pop();
+            if(old_arr.every(ev)){
+                old_arr.unshift(elem);
+                elem = old_arr.pop();
+            }
+            if(k + elem <= MAX_EL){
+                out.push(elem);
+                k += elem;
+                k = k == MAX_EL ? 0: k;
+                if(k == 0){
+                    OUTPUT.innerHTML += '[ '+out.join(' , ')+' ]<br>';
+                }
+            }
+            else{
+                inter_arr.push(elem);
+            }
+        }
+
+        //OUTPUT.innerHTML += '['+old_arr.join(',')+'] inter['+inter_arr.join(',')+'] out['+out.join(',')+']<br>';
+    }
+    return out;
+}
+
 window.onload = function(){
     // обработчик выбора вкладок
     $('#toolbar').click(function(e){
