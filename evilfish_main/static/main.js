@@ -32,6 +32,7 @@ $('#message-box-close').click(function(e){
         });
 });
 
+
 function fetchProduct(id, vegan){
     var prod_view = document.getElementsByClassName('product-view');
     prod_view = (vegan) ? prod_view[1] : prod_view[0];
@@ -42,7 +43,10 @@ function fetchProduct(id, vegan){
             return;
         }
         if (xhr.status == 200) {
-            prod_view.innerHTML = this.responseText;
+            var products = new Products(this.responseText);
+            products.custom_sorted(4);
+            products.render(prod_view);
+//            prod_view.innerHTML = this.responseText;
         } else {
             prod_view.innerHTML = '';
             alert(this.responseText, true);
@@ -53,58 +57,107 @@ function fetchProduct(id, vegan){
     xhr.send();
 }
 
-function custom_sorted(arr){ //rework
-    function ev(num){
-        return num > elem;
+function Products(string_data){
+    var res = JSON.parse(string_data);
+    for(key in res){
+        this[key] = res[key];
     }
-    const MAX_EL = 4;
-    var old_arr = arr.slice(0, arr.length).reverse();
-    var out = [];
-    var inter_arr = [];
-    var k = 0;
-    var i = 0;
-    var elem = null;
-    while(old_arr.length || inter_arr.length){
-        i++;
-        if(i > 1000){OUTPUT.innerHTML +='<hr>BREAK<hr>';break;}
-        while(inter_arr.length){
-
-            if(k + inter_arr[inter_arr.length - 1] <= MAX_EL){
-                elem = inter_arr.pop();
-                out.push(elem);
-                k += elem;
-                k = k == MAX_EL ? 0: k;
-                if(k == 0){
-                    OUTPUT.innerHTML += '[ '+out.join(' , ')+' ]<br>';
-                }
-            }
-            else{
-                break;
-            }
+    for(var i = 0; i < this.data.length; i++){
+        if(this.data[i].typecomp == 'st'){
+            this.data[i].sort_value = 1;
         }
-        if(old_arr.length){
-            elem = old_arr.pop();
-            if(old_arr.every(ev)){
-                old_arr.unshift(elem);
-                elem = old_arr.pop();
-            }
-            if(k + elem <= MAX_EL){
-                out.push(elem);
-                k += elem;
-                k = k == MAX_EL ? 0: k;
-                if(k == 0){
-                    OUTPUT.innerHTML += '[ '+out.join(' , ')+' ]<br>';
-                }
-            }
-            else{
-                inter_arr.push(elem);
-            }
+        else{
+            this.data[i].sort_value = 2;
         }
-
-        //OUTPUT.innerHTML += '['+old_arr.join(',')+'] inter['+inter_arr.join(',')+'] out['+out.join(',')+']<br>';
+        this.data[i].price = this.data[i].price.split('\n');
     }
-    return out;
 }
+Products.prototype = {
+    custom_sorted: function (MAX_EL){
+        function ev(num){
+            return num.sort_value > elem.sort_value;
+        }
+        var old_arr = this.data.slice(0, this.data.length).reverse();
+        var out = [];
+        var inter_arr = [];
+        var k = 0;
+        var i = 0;
+        var elem = null;
+        while(old_arr.length || inter_arr.length){
+            i++;
+            if(i > 1000){break;}
+            while(inter_arr.length){
+                if(k + inter_arr[inter_arr.length - 1].sort_value <= MAX_EL){
+                    elem = inter_arr.pop();
+                    out.push(elem);
+                    k += elem.sort_value;
+                    k = k == MAX_EL ? 0: k;
+                }
+                else{
+                    break;
+                }
+            }
+            if(old_arr.length){
+                elem = old_arr.pop();
+                if(old_arr.every(ev)){
+                    old_arr.unshift(elem);
+                    elem = old_arr.pop();
+                }
+                if(k + elem.sort_value <= MAX_EL){
+                    out.push(elem);
+                    k += elem.sort_value;
+                    k = k == MAX_EL ? 0: k;
+                }
+                else{
+                    inter_arr.push(elem);
+                }
+            }
+        }
+        this.data = out;
+    },
+    render: function(view){
+        view.innerHTML = "";
+        for(var i = 0; i < this.data.length; i++){
+            if(this.data[i].typecomp == 'st'){
+                this.standart_layout(view, i);
+                continue;
+            }
+            if(this.data[i].typecomp == 'd1'){
+                this.dual_layout(view, i);
+                continue;
+            }
+        }
+    },
+    standart_layout: function(view, i){
+        var el = document.createElement('div');
+        el.style.setProperty('animation-delay', (i*100)+'ms', "important");
+        el.className = 'standart_layout';
+        var HTML  = '<div><div>';
+        HTML += this.data[i].title;
+        HTML += this.data[i].imageurl != '' ? '<br><img width="100%" src="static/images/'+this.data[i].imageurl+'"><br>': '<br>';
+        HTML += this.data[i].price.join('<br>');
+        HTML += '<hr>';
+        HTML += this.data[i].description;
+        HTML += '</div></div>';
+        el.innerHTML = HTML;
+        view.appendChild(el);
+    },
+    dual_layout: function(view, i){
+        var el = document.createElement('div');
+        el.style.setProperty('animation-delay', (i*100)+'ms', "important");
+        el.className = 'dual_layout';
+        var HTML  = '<div><div>';
+        HTML += this.data[i].title;
+        HTML += this.data[i].imageurl != '' ? '<br><img width="100%" src="static/images/'+this.data[i].imageurl+'"><br>': '<br>';
+        HTML += this.data[i].price.join('<br>');
+        HTML += '<hr>';
+        HTML += this.data[i].description;
+        HTML += '</div></div>';
+        el.innerHTML = HTML;
+        view.appendChild(el);
+    }
+};
+
 
 window.onload = function(){
     // обработчик выбора вкладок
@@ -141,7 +194,7 @@ window.onload = function(){
         }
 
     });
-    //$(SELECTED_CATEG).click();
+    $(SELECTED_CATEG).click();
     $(SELECTED_CATEG_VEGAN).click();
 
 }
