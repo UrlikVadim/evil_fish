@@ -57,16 +57,7 @@
                         {% endfor %}
                         </div>
                     </div>
-                    <div class="product-view"><!--
-                        --><div style="display:inline-block;width:30%;height:80vh;background:RGB(111,111,111);">fewf</div><!--
-                         --><div style="display:inline-block;width:60%;height:80vh;background:RGB(222,222,222);">fewf</div><!--
-                         --><div style="display:inline-block;width:30%;height:80vh;background:RGB(121,121,121);">fewf</div><!--
-                         --><div style="display:inline-block;width:30%;height:80vh;background:RGB(111,222,111);">fewf</div><!--
-                         --><div style="display:inline-block;width:30%;height:80vh;background:RGB(222,111,111);">fewf</div><!--
-                         --><div style="display:inline-block;width:60%;height:80vh;background:RGB(111,222,111);">fewf</div><!--
-                         --><div style="display:inline-block;width:51vw;height:80vh;background:RGB(222,222,111);">fewf</div><!--
-                         --><div style="display:inline-block;width:25vw;height:80vh;background:RGB(111,222,222);">fewf</div><!--
-                     --></div>
+                    <div class="product-view"></div>
                 </div><!--
             --><div class="content-page" data-id="3">
                     <div class="categ">
@@ -90,15 +81,14 @@
                 {% else %}
                     {% for comm in comments %}
                     <div class="comment-block">
-                        <h1>{{ comm.name }}</h1>
+                        <h2>{{ comm.name }}</h2>
                         <hr>
                         <pre>
                             {% for text in comm.comment %}
                             {{ text }}<br>
                             {% endfor %}
                         </pre>
-                        <hr>
-                        <h2 style="text-align:right">{{ comm.addtime|date:"d.m.Y" }}</h2>
+                        <h4 style="text-align:right">{{ comm.addtime|date:"d.m.Y" }}</h4>
                     </div>
                     {% endfor %}
                     {% if not commented%}
@@ -116,7 +106,7 @@
                     {% csrf_token %}
                     <div class="form-text"><div>Имя</div></div>
                     <input name="name" type="text" required>
-                    <div class="form-text"><div>Почта<small>(не будет показана на сайте)</small></div></div>
+                    <div class="form-text"><div>Почта  <small style="opacity:0.7">(не будет показана на сайте)</small></div></div>
                     <input name="email"  type="email" required pattern="[A-Za-zА-Яа-яЁё0-9]{2,}@[A-Za-zА-Яа-яЁё0-9]{2,}.[A-Za-zА-Яа-яЁё0-9]{2,}">
                     <div class="form-text"><div>Отзыв</div></div>
                     <textarea name="comment"></textarea>
