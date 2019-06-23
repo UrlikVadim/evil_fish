@@ -106,8 +106,8 @@ var editProductWindow = Ext.create('Ext.window.Window', {
             store: Ext.create('Ext.data.Store', {
                 fields: ['type', 'value'],
                 data : [
-                    {"type":"standart", "value":"Стандартная компоновка"},
-                    {"type":"pizza", "value":"Компоновка пиццы"}
+                    {"type":"st", "value":"Стандартная компоновка"},
+                    {"type":"d1", "value":"Двойная компоновка"}
                 ]
             }),
             bind: {
