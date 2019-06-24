@@ -100,7 +100,7 @@ var editProductWindow = Ext.create('Ext.window.Window', {
         {
             xtype:'combo',
             itemId: 'typecomp',
-            fieldLabel:'Тип компоновки',
+            fieldLabel:'<a href="/admin/layouts.html" target="_blank">Тип компоновки</a>',
             valueField: 'type',
             displayField: 'value',
             store: Ext.create('Ext.data.Store', {
@@ -147,6 +147,16 @@ var editProductWindow = Ext.create('Ext.window.Window', {
             fieldLabel:'Ссылка на изображение',
             bind: {
                 value: '{imageurl}'
+            },
+        },
+        {
+            xtype:'image',
+            itemId: 'imageView',
+            height: '10%',
+            width: '150%',
+            fieldLabel:'Изображение',
+            bind: {
+                src: '/static/images/{imageurl}'
             },
         },
         {
@@ -254,7 +264,7 @@ var editProductWindow = Ext.create('Ext.window.Window', {
                     });
                 }
             }
-        },
+        }
     ]
 });
 
