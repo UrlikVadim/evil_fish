@@ -116,16 +116,21 @@ Products.prototype = {
         this.data = out;
     },
     render: function(view){
-        view.innerHTML = "";
-        for(var i = 0; i < this.data.length; i++){
-            if(this.data[i].typecomp == 'st'){
-                this.standart_layout(view, i);
-                continue;
+        if(this.data.length){
+            view.innerHTML = "";
+            for(var i = 0; i < this.data.length; i++){
+                if(this.data[i].typecomp == 'st'){
+                    this.standart_layout(view, i);
+                    continue;
+                }
+                if(this.data[i].typecomp == 'd1'){
+                    this.dual_layout(view, i);
+                    continue;
+                }
             }
-            if(this.data[i].typecomp == 'd1'){
-                this.dual_layout(view, i);
-                continue;
-            }
+        }
+        else{
+            view.innerHTML = '<br><br><h1 style="margin:auto;text-align:center;">В данной категории нет продуктов</h1>';
         }
     },
     standart_layout: function(view, i){
@@ -166,14 +171,14 @@ window.onload = function(){
             CURRENT_WINDOW.classList.remove('menu-button-clicked');
             e.target.classList.add('menu-button-clicked');
             CURRENT_WINDOW = e.target;
-            $('.content-page').css('overflow', 'hidden');
+            $('.content-page, .product-view').css('overflow', 'hidden');
             $('#slide-block').animate(
             {
                 left: e.target.dataset.offset
             },
-            500,
+            400,
             function(){
-                $('.content-page').css('overflow', 'auto');
+                $('.content-page, .product-view').css('overflow', 'auto');
             }
             );
         }

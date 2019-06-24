@@ -362,12 +362,19 @@ textarea{
 /*-----------------------------------*/
 .categ{
     position:absolute;
-    top:2%;
+    top:0;
     left:1%;
     width: 16%;
-    height:96%;
-    border-radius: 1px;
+    max-height:96%;
+    background:rgb(186,186,186);
+    border-bottom: 1px solid #303030;
+    border-left: 1px solid #303030;
+    border-right: 1px solid #303030;
+    border-radius: 0 0 5px 5px;
     overflow:auto;
+        -webkit-box-shadow:  0px 0px 10px 1px rgba(0,0,0,0.83);
+    -moz-box-shadow:  0px 0px 10px 1px rgba(0,0,0,0.83);
+    box-shadow:  0px 0px 10px 1px rgba(0,0,0,0.83);
 
 }
 .categ::-webkit-scrollbar-thumb {
@@ -380,7 +387,6 @@ textarea{
 }
 
 .categ > div{
-    border-top: 1px solid #303030;
     overflow: hidden;
     width: 100%;
     border-radius:2px;
@@ -398,10 +404,7 @@ textarea{
     padding-top:5%;
     padding-bottom:5%;
     width: calc(100%-4px);
-    border-bottom: 1px solid #303030;
-    border-left: 1px solid #303030;
-    border-right: 1px solid #303030;
-     -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
        -moz-user-select: none; /* Firefox */
@@ -414,10 +417,7 @@ textarea{
 .categ-item-clicked{
     font-size: 1.1em;
     color: #202020;
-    background:rgb(170,170,170);
-    -webkit-box-shadow: inset 0px 0px 23px -7px rgba(0,0,0,0.83);
-    -moz-box-shadow: inset 0px 0px 23px -7px rgba(0,0,0,0.83);
-    box-shadow: inset 0px 0px 23px -7px rgba(0,0,0,0.83);
+    background: linear-gradient(0deg, rgba(186,186,186,1) 0%, rgba(222,222,222,1) 50%, rgba(186,186,186,1) 100%);
 }
 .categ-item-clicked:hover{
    background:rgb(170,170,170) !important;
@@ -508,6 +508,7 @@ textarea{
     top: 2%;
     height:96%;
     margin: auto;
+    border-radius: 2px;
     background:RGB(222,222,222);
     -webkit-box-shadow:  0px 0px 10px 1px rgba(0,0,0,0.83);
     -moz-box-shadow:  0px 0px 10px 1px rgba(0,0,0,0.83);
