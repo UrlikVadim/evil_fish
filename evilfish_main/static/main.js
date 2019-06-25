@@ -7,12 +7,12 @@ window.native_alert = window.alert;
 window.alert = function(msg, error){
     msg = msg ? msg : 'Сервер не отвечает';
     if(error){
-        document.getElementById("message-box-inner").innerHTML = '<b>Ошибка</b>' + msg.toString();
+        document.getElementById("msg_alert").innerHTML = '<b>Ошибка</b>' + msg.toString();
     }else{
-        document.getElementById("message-box-inner").innerHTML = msg.toString();
+        document.getElementById("msg_alert").innerHTML = msg.toString();
     }
     $('#disable-win').css('display', 'block');
-    $('#message-box').animate(
+    $('.message-box').animate(
     {
         top: '25%'
     },
@@ -22,7 +22,7 @@ window.alert = function(msg, error){
     });
 }
 $('#message-box-close').click(function(e){
-    $('#message-box').animate(
+    $('.message-box').animate(
         {
             top: '-55%'
         },
@@ -130,7 +130,7 @@ Products.prototype = {
             }
         }
         else{
-            view.innerHTML = '<br><br><h1 style="margin:auto;text-align:center;">В данной категории нет продуктов</h1>';
+            view.innerHTML = '<div class="nono-product"><div class="message-box-inner">В данной категории нет продуктов</div></div>';
         }
     },
     standart_layout: function(view, i){

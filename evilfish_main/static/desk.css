@@ -62,7 +62,7 @@ body{
     z-index:10;
     background: rgba(0,0,0,0.9);
 }
-#message-box{
+.message-box, .nono-product{
     position: relative;
     overflow: hidden;
     left: 25%;
@@ -74,9 +74,13 @@ body{
     font-size: 4vh;
     color: #474747;
     border-radius: 3px;
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.47);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.47);
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.47);
     background: rgba(222,222,222,0.9);
 }
-#message-box-inner{
+.nono-product{top: 10%;background: rgba(222,222,222,1);}
+.message-box-inner{
     min-height: 10vh;
     display: flex;
     flex-direction: column;
@@ -417,7 +421,7 @@ textarea{
 .categ-item-clicked{
     font-size: 1.1em;
     color: #202020;
-    background: linear-gradient(0deg, rgba(186,186,186,1) 0%, rgba(222,222,222,1) 50%, rgba(186,186,186,1) 100%);
+    background: rgb(170,170,170);
 }
 .categ-item-clicked:hover{
    background:rgb(170,170,170) !important;
