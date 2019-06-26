@@ -138,7 +138,12 @@ Products.prototype = {
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'standart_layout';
         var HTML  = '<div><div>';
-        HTML += this.data[i].title;
+        if (this.data[i].imageurl != ''){
+            HTML += '<b style="font-size:3vh;position: absolute;top:0%;left:0;">'+this.data[i].title+'</b>';
+        }
+        else{
+            HTML += '<b style="font-size:3vh;">'+this.data[i].title+'</b>';
+        }
         HTML += this.data[i].imageurl != '' ? '<br><img width="100%" src="static/images/'+this.data[i].imageurl+'"><br>': '<br>';
         HTML += this.data[i].price.join('<br>');
         HTML += '<hr>';
