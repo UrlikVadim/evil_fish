@@ -120,11 +120,11 @@ Products.prototype = {
             view.innerHTML = "";
             for(var i = 0; i < this.data.length; i++){
                 if(this.data[i].typecomp == 'st'){
-                    this.standart_layout(view, i);
+                    view.appendChild(this.standart_layout(i));
                     continue;
                 }
                 if(this.data[i].typecomp == 'd1'){
-                    this.dual_layout(view, i);
+                    view.appendChild(this.dual_layout(i));
                     continue;
                 }
             }
@@ -133,26 +133,39 @@ Products.prototype = {
             view.innerHTML = '<div class="nono-product"><div class="message-box-inner">В данной категории нет продуктов</div></div>';
         }
     },
-    standart_layout: function(view, i){
+    standart_layout: function(i){
         var el = document.createElement('div');
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'standart_layout';
-        var HTML  = '<div><div>';
+        var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;';
+        var el_s = 'vertical-align: middle;';
+        var HTML = '<div><div>';
         if (this.data[i].imageurl != ''){
             HTML += '<b style="font-size:3vh;position: absolute;top:0%;left:0;">'+this.data[i].title+'</b>';
+            HTML +=  '<br><img width="100%" src="static/images/'+this.data[i].imageurl+'"><br>';
+            HTML += this.data[i].description;
+            HTML += '<hr>';
+            for(var j =0; j < this.data[i].price.length; j++){
+                var price = this.data[i].price[j].split(' ');
+                var pr = price.pop()
+                HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="color:red;'+el_s+'">'+pr+'</span></div>';
+            }
         }
         else{
-            HTML += '<b style="font-size:3vh;">'+this.data[i].title+'</b>';
+            HTML += '<b style="font-size:3vh;">'+this.data[i].title+'</b><br>';
+            HTML += this.data[i].description;
+            HTML += '<hr>';
+            for(var j =0; j < this.data[i].price.length; j++){
+                var price = this.data[i].price[j].split(' ');
+                var pr = price.pop()
+                HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="color:red;'+el_s+'">'+pr+'</span></div>';
+            }
         }
-        HTML += this.data[i].imageurl != '' ? '<br><img width="100%" src="static/images/'+this.data[i].imageurl+'"><br>': '<br>';
-        HTML += this.data[i].price.join('<br>');
-        HTML += '<hr>';
-        HTML += this.data[i].description;
         HTML += '</div></div>';
         el.innerHTML = HTML;
-        view.appendChild(el);
+        return el;
     },
-    dual_layout: function(view, i){
+    dual_layout: function(i){
         var el = document.createElement('div');
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'dual_layout';
@@ -164,7 +177,7 @@ Products.prototype = {
         HTML += this.data[i].description;
         HTML += '</div></div>';
         el.innerHTML = HTML;
-        view.appendChild(el);
+        return el;
     }
 };
 
