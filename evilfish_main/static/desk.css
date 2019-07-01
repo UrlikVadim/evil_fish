@@ -481,7 +481,7 @@ textarea{
     display:inline-block;
     position: relative;
     vertical-align:top;
-    height:70%;
+    height:55vh;
     opacity:0.0;
     animation: append_product 0.1s linear;
     animation-fill-mode: forwards;
