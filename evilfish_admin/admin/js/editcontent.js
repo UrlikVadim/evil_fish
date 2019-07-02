@@ -107,7 +107,8 @@ var editProductWindow = Ext.create('Ext.window.Window', {
                 fields: ['type', 'value'],
                 data : [
                     {"type":"st", "value":"Стандартная компоновка"},
-                    {"type":"d1", "value":"Двойная компоновка"}
+                    {"type":"d1", "value":"Двойная компоновка(большое изображение)"},
+                    {"type":"d2", "value":"Двойная компоновка(маленькое изображение)"},
                 ]
             }),
             bind: {
