@@ -505,6 +505,7 @@ textarea{
 }
 
 .standart_layout > div, .dual_layout > div{
+
     display:block;
     position: relative;
     z-index:1;
@@ -519,6 +520,7 @@ textarea{
     box-shadow:  0px 0px 10px 1px rgba(0,0,0,0.83);
 }
 .standart_layout > div > div, .dual_layout > div > div{
+    color: #222222;
     position:relative;
     top:1%;
     height:98%;

@@ -127,6 +127,10 @@ Products.prototype = {
                     view.appendChild(this.dual_layout(i));
                     continue;
                 }
+                if(this.data[i].typecomp == 'd2'){
+                    view.appendChild(this.dual_layout2(i));
+                    continue;
+                }
             }
         }
         else{
@@ -137,7 +141,7 @@ Products.prototype = {
         var el = document.createElement('div');
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'standart_layout';
-        var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;';
+        var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;margin: 2% 0;';
         var el_s = 'vertical-align: middle;';
         var HTML = '<div><div>';
         if (this.data[i].imageurl != ''){
@@ -169,23 +173,44 @@ Products.prototype = {
         var el = document.createElement('div');
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'dual_layout';
-        var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;';
+        var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;margin: 2% 0;';
         var el_s = 'vertical-align: middle;';
         var HTML  = '<div><div>';
         HTML += '<b style="font-size:3vh;position: absolute;top:0%;left:0;">'+this.data[i].title+'</b>';
         HTML += this.data[i].imageurl != '' ? '<div style="margin:auto;width:78%"><img width="100%" src="static/images/'+this.data[i].imageurl+'"></div>': '<br>';
-        HTML += '<div style="display:inline-block;width:45%;height:30%;vertical-align:top;padding:2%;border-right: 1px solid #999999;border-top: 1px solid #999999">';
+        HTML += '<div style="display:inline-block;width:45%;height:30%;vertical-align:top;padding:0 2%;border-right: 1px solid #999999;border-top: 1px solid #999999">';
         for(var j =0; j < this.data[i].price.length; j++){
             var price = this.data[i].price[j].split(' ');
             var pr = price.pop()
             HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="color:red;'+el_s+'">'+pr+'</span></div>';
         }
-        HTML += '</div><div style="display:inline-block;width:46%;vertical-align:top;padding:2%;border-top: 1px solid #999999">';
+        HTML += '</div><div style="display:inline-block;width:46%;vertical-align:top;padding:0 2%;border-top: 1px solid #999999">';
         HTML += this.data[i].description;
         HTML += '</div></div></div>';
         el.innerHTML = HTML;
         return el;
-    }
+    },
+    dual_layout2: function(i){
+        var el = document.createElement('div');
+        el.style.setProperty('animation-delay', (i*100)+'ms', "important");
+        el.className = 'dual_layout';
+        var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;margin: 4% 0;';
+        var el_s = 'vertical-align: middle;';
+        var HTML  = '<div><div>';
+        HTML += '<div><b style="font-size:3vh;">'+this.data[i].title+'</b></div>';
+        HTML += '<div style="display:inline-block;width:45%;height:100%;vertical-align:top;padding:0 2%;border-right: 1px solid #999999;">';
+        HTML += this.data[i].imageurl != '' ? '<div style="margin:auto;width:100%"><img width="100%" src="static/images/'+this.data[i].imageurl+'"></div>': '<br>';
+        HTML += this.data[i].description;
+        HTML += '</div><div style="display:inline-block;width:46%;vertical-align:top;padding:0 2%;">';
+        for(var j =0; j < this.data[i].price.length; j++){
+            var price = this.data[i].price[j].split(' ');
+            var pr = price.pop()
+            HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="color:red;'+el_s+'">'+pr+'</span></div>';
+        }
+        HTML += '</div></div></div>';
+        el.innerHTML = HTML;
+        return el;
+    },
 };
 
 
