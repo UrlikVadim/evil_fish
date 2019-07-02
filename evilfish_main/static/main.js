@@ -144,7 +144,7 @@ Products.prototype = {
             HTML += '<b style="font-size:3vh;position: absolute;top:0%;left:0;">'+this.data[i].title+'</b>';
             HTML +=  '<br><img width="100%" src="static/images/'+this.data[i].imageurl+'"><br>';
             HTML += this.data[i].description;
-            HTML += '<hr>';
+            HTML += '<div style="margin: 2% 0;border-top: 1px solid #999999"></div>';
             for(var j =0; j < this.data[i].price.length; j++){
                 var price = this.data[i].price[j].split(' ');
                 var pr = price.pop()
@@ -154,7 +154,7 @@ Products.prototype = {
         else{
             HTML += '<b style="font-size:3vh;">'+this.data[i].title+'</b><br>';
             HTML += this.data[i].description;
-            HTML += '<hr>';
+            HTML += '<div style="margin: 2% 0;border-top: 1px solid #999999"></div>';
             for(var j =0; j < this.data[i].price.length; j++){
                 var price = this.data[i].price[j].split(' ');
                 var pr = price.pop()
@@ -174,13 +174,13 @@ Products.prototype = {
         var HTML  = '<div><div>';
         HTML += '<b style="font-size:3vh;position: absolute;top:0%;left:0;">'+this.data[i].title+'</b>';
         HTML += this.data[i].imageurl != '' ? '<div style="margin:auto;width:78%"><img width="100%" src="static/images/'+this.data[i].imageurl+'"></div>': '<br>';
-        HTML += '<div style="display:inline-block;width:46%;vertical-align:top;padding:2%">';
+        HTML += '<div style="display:inline-block;width:45%;height:30%;vertical-align:top;padding:2%;border-right: 1px solid #999999;border-top: 1px solid #999999">';
         for(var j =0; j < this.data[i].price.length; j++){
             var price = this.data[i].price[j].split(' ');
             var pr = price.pop()
             HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="color:red;'+el_s+'">'+pr+'</span></div>';
         }
-        HTML += '</div><div style="display:inline-block;width:46%;vertical-align:top;padding:2%">';
+        HTML += '</div><div style="display:inline-block;width:46%;vertical-align:top;padding:2%;border-top: 1px solid #999999">';
         HTML += this.data[i].description;
         HTML += '</div></div></div>';
         el.innerHTML = HTML;
