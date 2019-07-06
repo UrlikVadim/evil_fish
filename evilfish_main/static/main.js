@@ -44,7 +44,12 @@ function fetchProduct(id, vegan){
         }
         if (xhr.status == 200) {
             var products = new Products(this.responseText);
-            products.custom_sorted(4);
+            if(/Android|webOS|iPhone|iPad|iPod|pocket|psp|kindle|avantgo|blazer|midori|Tablet|Palm|maemo|plucker|phone|BlackBerry|symbian|IEMobile|mobile|ZuneWP7|Windows Phone|Opera Mini/i.test(navigator.userAgent)) {
+                products.custom_sorted(2);
+            }
+            else{
+                products.custom_sorted(4);
+            }
             products.render(prod_view);
 //            prod_view.innerHTML = this.responseText;
         } else {
@@ -134,18 +139,22 @@ Products.prototype = {
             }
         }
         else{
-            view.innerHTML = '<div class="nono-product"><div class="message-box-inner">В данной категории нет продуктов</div></div>';
+            view.innerHTML = '<div class="nono-product"><div class="message-box-inner">Категория пуста</div></div>';
         }
     },
     standart_layout: function(i){
         var el = document.createElement('div');
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'standart_layout';
+        var head_s = 'font-size:3vh';
+        if(/Android|webOS|iPhone|iPad|iPod|pocket|psp|kindle|avantgo|blazer|midori|Tablet|Palm|maemo|plucker|phone|BlackBerry|symbian|IEMobile|mobile|ZuneWP7|Windows Phone|Opera Mini/i.test(navigator.userAgent)) {
+                head_s = 'font-size:2vh';
+        }
         var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;margin: 2% 0;';
         var el_s = 'vertical-align: middle;';
         var HTML = '<div><div>';
         if (this.data[i].imageurl != ''){
-            HTML += '<b style="font-size:3vh;position: absolute;top:0%;left:0;">'+this.data[i].title+'</b>';
+            HTML += '<b style="'+head_s+';position: absolute;top:0%;left:0;">'+this.data[i].title+'</b>';
             HTML +=  '<br><img width="100%" src="static/images/'+this.data[i].imageurl+'"><br>';
             HTML += this.data[i].description;
             HTML += '<div style="margin: 2% 0;border-top: 1px solid #999999"></div>';
@@ -156,7 +165,7 @@ Products.prototype = {
             }
         }
         else{
-            HTML += '<b style="font-size:3vh;">'+this.data[i].title+'</b><br>';
+            HTML += '<b style="'+head_s+'">'+this.data[i].title+'</b><br>';
             HTML += this.data[i].description;
             HTML += '<div style="margin: 2% 0;border-top: 1px solid #999999"></div>';
             for(var j =0; j < this.data[i].price.length; j++){
@@ -173,18 +182,27 @@ Products.prototype = {
         var el = document.createElement('div');
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'dual_layout';
+        var head_s = 'font-size:3vh';
+        if(/Android|webOS|iPhone|iPad|iPod|pocket|psp|kindle|avantgo|blazer|midori|Tablet|Palm|maemo|plucker|phone|BlackBerry|symbian|IEMobile|mobile|ZuneWP7|Windows Phone|Opera Mini/i.test(navigator.userAgent)) {
+            head_s = 'font-size:2vh';
+        }
         var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;margin: 2% 0;';
         var el_s = 'vertical-align: middle;';
         var HTML  = '<div><div>';
-        HTML += '<b style="font-size:3vh;position: absolute;top:0%;left:0;">'+this.data[i].title+'</b>';
+        if(this.data[i].imageurl != ''){
+            HTML += '<b style="'+head_s+';position: absolute;top:0%;left:0;">'+this.data[i].title+'</b>';
+        }
+        else{
+            HTML += '<b style="'+head_s+';">'+this.data[i].title+'</b>';
+        }
         HTML += this.data[i].imageurl != '' ? '<div style="margin:auto;width:78%"><img width="100%" src="static/images/'+this.data[i].imageurl+'"></div>': '<br>';
-        HTML += '<div style="display:inline-block;width:45%;height:30%;vertical-align:top;padding:0 2%;border-right: 1px solid #999999;border-top: 1px solid #999999">';
+        HTML += '<div style="display:inline-block;width:45%;height:100%;vertical-align:top;padding:0 2%;border-right: 1px solid #999999;border-top: 1px solid #999999">';
         for(var j =0; j < this.data[i].price.length; j++){
             var price = this.data[i].price[j].split(' ');
             var pr = price.pop()
             HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="color:red;'+el_s+'">'+pr+'</span></div>';
         }
-        HTML += '</div><div style="display:inline-block;width:46%;vertical-align:top;padding:0 2%;border-top: 1px solid #999999">';
+        HTML += '</div><div style="display:inline-block;width:46%;vertical-align:top;padding:0.5% 2%;border-top: 1px solid #999999">';
         HTML += this.data[i].description;
         HTML += '</div></div></div>';
         el.innerHTML = HTML;
@@ -194,10 +212,14 @@ Products.prototype = {
         var el = document.createElement('div');
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'dual_layout';
+        var head_s = 'font-size:3vh';
+        if(/Android|webOS|iPhone|iPad|iPod|pocket|psp|kindle|avantgo|blazer|midori|Tablet|Palm|maemo|plucker|phone|BlackBerry|symbian|IEMobile|mobile|ZuneWP7|Windows Phone|Opera Mini/i.test(navigator.userAgent)) {
+            head_s = 'font-size:2vh';
+        }
         var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;margin: 4% 0;';
         var el_s = 'vertical-align: middle;';
         var HTML  = '<div><div>';
-        HTML += '<div><b style="font-size:3vh;">'+this.data[i].title+'</b></div>';
+        HTML += '<div><b style="'+head_s+';">'+this.data[i].title+'</b></div>';
         HTML += '<div style="display:inline-block;width:45%;height:100%;vertical-align:top;padding:0 2%;border-right: 1px solid #999999;">';
         HTML += this.data[i].imageurl != '' ? '<div style="margin:auto;width:100%"><img width="100%" src="static/images/'+this.data[i].imageurl+'"></div>': '<br>';
         HTML += this.data[i].description;
