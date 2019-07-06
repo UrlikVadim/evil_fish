@@ -8,18 +8,18 @@ from django.utils.deprecation import MiddlewareMixin
 
 class SpamRequestBlock(MiddlewareMixin):
     def process_request(self, request):
-        if request.session.get('timeout', False):
-            timeout = datetime.strptime(request.session['timeout'], '%Y%m%d%H%M%S')
-            if timeout > datetime.now() and request.path_info != '/blockspam':
-                timeout += timedelta(seconds=request.session['counter']*10)
-                request.session['timeout'] = timeout.strftime('%Y%m%d%H%M%S')
-                return HttpResponseRedirect('/blockspam')
+        timeout = request.session.get('timeout', datetime.now().strftime('%Y%m%d%H%M%S'))
+        timeout = datetime.strptime(timeout, '%Y%m%d%H%M%S')
+        if timeout > datetime.now() and request.path_info != '/blockspam':
+            timeout += timedelta(seconds=request.session['counter']*10)
+            request.session['timeout'] = timeout.strftime('%Y%m%d%H%M%S')
+            return HttpResponseRedirect('/blockspam')
         else:
             if request.path_info == '/':
                 request.session['guest'] = True
             if not request.session.get('guest', False):
                 return HttpResponseRedirect('/')
-            if request.path_info == '/login':
+            if request.path_info == '/login' and request.method == 'POST':
                 request.session['counter'] += 1
             else:
                 request.session['counter'] = 0
@@ -29,7 +29,7 @@ class SpamRequestBlock(MiddlewareMixin):
             if request.session['counter'] >= 5 and not request.session.get('admin', False):
                 timeout = datetime.now() + timedelta(seconds=request.session['counter']*10)
                 request.session['timeout'] = timeout.strftime('%Y%m%d%H%M%S')
-                return HttpResponseRedirect('/blockspam')
+                return HttpResponse('/blockspam', status=303, content_type='text/plain')
 
 
 class AdminRequestBlock(MiddlewareMixin):
