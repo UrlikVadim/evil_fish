@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель администратора</title>
+    <script>
+        function getCookie(name) {
+            var matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+    </script>
+    {% load static %}
+    <script type="text/javascript" src="{% static 'admin/ext-6.2.0/build/ext-all-debug.js' %}"></script>
+    <!--<script type="text/javascript" src="{% static 'admin/ext-6.2.0/build/ext-modern-all.js' %}"></script>-->
+
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/ext-6.2.0/build/classic/theme-triton/resources/theme-triton-all.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/ext-6.2.0/build/classic/theme-triton/resources/theme-triton-all_1.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/ext-6.2.0/build/classic/theme-triton/resources/theme-triton-all_2.css' %}">
+    <script type="text/javascript" src="{% static 'admin/ext-6.2.0/build/classic/theme-triton/theme-triton.js' %}"></script>
+    <script type="text/javascript" src="{% static 'admin/js/editcomment.js' %}"></script>
+    <script type="text/javascript" src="{% static 'admin/js/editcontent.js' %}"></script>
+    <script type="text/javascript" src="{% static 'admin/js/editlogo.js' %}"></script>
+    <script>
+        Ext.application({
+        name: 'Admin_panel',
+        launch: function() {
+            var app = Ext.create('Ext.container.Viewport', {
+                layout: 'fit',
+                items: [
+                    Ext.create('Ext.TabPanel', {
+                        title:"Панель администратора",
+                        tabBarPosition: 'top',
+                        items: [
+                            Ext.create('App.admin.Logo',{
+                                GET_LOGO: '/admin/getLogo',
+                                SET_LOGO: '/admin/setLogo',
+                            }),
+                            Ext.create('App.admin.Content',{
+
+                            }),
+                            Ext.create('App.admin.Comment',{}),
+                        ],
+                    })
+                ]
+        });
+    }
+});
+    </script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Компоновки</title>
+    <style>
+body, html{
+    margin:0;
+    padding:0;
+    height: 100%;
+    width: 100%;
+}
+body{
+    font-family: Verdana, sans-serif;
+    font-weight: 500;
+    background-color: #555555;
+}
+#head{
+    text-align: center;
+    height: 7%;
+    font-size: 5vh;
+    font-weight: 600;
+    color: #cccccc;
+}
+#main{
+    height: 93%;
+    width: 100%;
+}
+.standart_layout, .dual_layout{
+    display:inline-block;
+    position: relative;
+    vertical-align:top;
+    height:55vh;
+}
+.dual_layout{
+    width:39.5%;
+
+}
+.standart_layout{
+    width:20%;
+}
+
+.standart_layout > div, .dual_layout > div{
+
+    display:block;
+    position: relative;
+    z-index:1;
+    text-overflow: ellipsis;
+    top: 2%;
+    height:96%;
+    margin: auto;
+    border-radius: 2px;
+    background:RGB(50,50,50);
+    -webkit-box-shadow:  0px 0px 10px 1px rgba(0,0,0,0.83);
+    -moz-box-shadow:  0px 0px 10px 1px rgba(0,0,0,0.83);
+    box-shadow:  0px 0px 10px 1px rgba(0,0,0,0.83);
+}
+.standart_layout > div > div, .dual_layout > div > div{
+    color: #bbbbbb;
+    position:relative;
+    top:1%;
+    height:98%;
+    overflow: hidden;
+    margin:auto;
+    text-overflow: ellipsis;
+}
+.standart_layout > div > div{width:90%;}
+.dual_layout > div > div{width:96%;}
+
+
+
+.standart_layout > div{
+    width:19vw;
+    font-family: Verdana, sans-serif;
+    font-size: 2vh;
+    font-weight: 400;
+    color: #222222;
+}
+.dual_layout > div{
+    width:39vw;
+}
+.con_s{
+    display: -webkit-flex;
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    margin: 2% 0;
+}
+.el_s {
+    vertical-align: middle;
+}
+    </style>
+</head>
+<body>
+<div id="head">Компоновки</div>
+<div id="main">
+    <div class="standart_layout">
+        <div><div>
+            <b style="font-size:3vh;position: absolute;top:0%;left:0;">Стандартная</b>
+            <br><img width="100%" src="/static/admin/test.png"><br>
+            Описание: съешь ещё этих мягких французских булок, да выпей чаю
+            <div style="margin: 2% 0;border-top: 1px solid #999999"></div>
+            <div class="con_s"><span class="el_s">Описание/Цена раз</span><span class="el_s" style="color:red;">100р</span></div>
+            <div class="con_s"><span class="el_s">Описание/Цена два</span><span class="el_s" style="color:red;">200р</span></div>
+            <div class="con_s"><span class="el_s">Описание/Цена три</span><span class="el_s" style="color:red;">300р</span></div>
+            <div class="con_s"><span class="el_s">Описание/Цена четыре...</span><span class="el_s" style="color:red;">400р</span></div>
+        </div></div>
+    </div>
+    <div class="dual_layout">
+        <div><div>
+            <b style="font-size:3vh;position: absolute;top:0%;left:0;">Двойная(большое изображение)</b>
+            <div style="margin:auto;width:78%"><img width="100%" src="/static/admin/test.png"></div>
+            <div style="display:inline-block;width:44%;height:100%;vertical-align:top;padding:0 2%;border-right: 1px solid #999999;border-top: 1px solid #999999">
+                <div class="con_s"><span class="el_s">Описание/Цена раз</span><span class="el_s" style="color:red;">100р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена два</span><span class="el_s" style="color:red;">200р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена три</span><span class="el_s" style="color:red;">300р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена четыре...</span><span class="el_s" style="color:red;">400р</span></div>
+            </div>
+            <div style="display:inline-block;width:46%;vertical-align:top;padding:0.5% 2%;border-top: 1px solid #999999">
+                Описание: съешь ещё этих мягких французских булок, да выпей чаю
+            </div>
+        </div></div>
+    </div>
+    <div class="dual_layout">
+        <div><div>
+            <div><b style="font-size:3vh;">Двойная(маленькое изображение)</b></div>
+            <div style="display:inline-block;width:45%;height:100%;vertical-align:top;padding:0 2%;border-right: 1px solid #999999;">
+                <div style="margin:auto;width:100%"><img width="100%" src="/static/admin/test.png"></div>
+                Описание: съешь ещё этих мягких французских булок, да выпей чаю
+            </div>
+            <div style="display:inline-block;width:45%;vertical-align:top;padding:0 2%;">
+                <div class="con_s"><span class="el_s">Описание/Цена раз</span><span class="el_s" style="color:red;">100р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена два</span><span class="el_s" style="color:red;">200р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена три</span><span class="el_s" style="color:red;">300р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена четыре</span><span class="el_s" style="color:red;">400р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена пять</span><span class="el_s" style="color:red;">500р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена шесть</span><span class="el_s" style="color:red;">600р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена семь</span><span class="el_s" style="color:red;">700р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена восемь</span><span class="el_s" style="color:red;">800р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена девять</span><span class="el_s" style="color:red;">900р</span></div>
+                <div class="con_s"><span class="el_s">Описание/Цена десять...</span><span class="el_s" style="color:red;">1000р</span></div>
+            </div>
+        </div></div>
+    </div>
+</div>
+</body>
+</html>
