@@ -15,6 +15,8 @@ import os
 def index(request):
     return render(request, "admin.html")
 
+def layouts(request):
+    return render(request, "layouts.html")
 
 def getLogo(request):
     out = Logo.objects.get(pk=1)
