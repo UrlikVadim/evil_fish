@@ -22,21 +22,24 @@ Product = apps.get_model('evilfish_admin', 'Product')
 Comments = apps.get_model('evilfish_admin', 'Comments')
 Admins = apps.get_model('evilfish_admin', 'Admins')
 
-# Create your views here.
-
+re_pattern = re.compile(r'v=([\w\s]+)&?')
 
 def index(request):
     comments = []
     categ = []
+    logo = None
     try:
         comments = Comments.objects.filter(visible=True)
         categ = Category.objects.all()
+        logo = Logo.objects.get(pk=1)
     except:
         pass
     for comm in comments:
         comm.comment = comm.comment.split('\n')
+    if logo.urlvideo != '':
+        logo.urlvideo = re_pattern.search(logo.urlvideo).group(1)
     context = {
-        'logo': Logo.objects.get(pk=1),
+        'logo': logo,
         'categ': categ,
         'comments': comments,
         'commented': request.session.get('sendcomm', False)
@@ -138,24 +141,12 @@ def blockspam(request):
     fmt = '%Y%m%d%H%M%S'
     timeout = datetime.strptime(request.session.get('timeout', datetime.now().strftime(fmt)), fmt)
     curr = datetime.now()
-    current = {
-        "year": curr.year,
-        "month": curr.month,
-        "day": curr.day,
-        "hour": curr.hour,
-        "minute": curr.minute,
-        "second": curr.second
-    }
+    time_seconds = timeout - curr
     out = {
         "path": request.session['prev_path'],
-        "year": timeout.year,
-        "month": timeout.month,
-        "day": timeout.day,
-        "hour": timeout.hour,
-        "minute": timeout.minute,
-        "second": timeout.second
+        "time": time_seconds.total_seconds(),
     }
-    return render(request, "blockspam.html", {'time': out, 'curr': current})
+    return render(request, "blockspam.html", {'time': out})
 
 
 def login(request):
