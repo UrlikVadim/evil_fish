@@ -14,7 +14,7 @@
 
        html{
             box-shadow: inset 0em 0em 0.5em 0.1em black;
-            background: linear-gradient(to right, gray, #eeeeee);
+            background: #aaaaaa;
             overflow : hidden;
             height: 100%;
             width: 100%;
@@ -23,18 +23,22 @@
 </head>
 <body>
 <p><b style="color:red;">ЗАЩИТА ОТ СПАМ АТАКИ</b></p>
-<p>Вы совершили слишком много запросов на "{{time.path}}"</p>
+<p>Вы совершили слишком много запросов на вход в панель администратора</p>
 <p>Дождитесь окончания времени и можете продолжить пользоваться сайтом</p>
 <p id="time"></p>
 
 <script>
-    var timeout = new Date({{time.year}},{{time.month}},{{time.day}},{{time.hour}},{{time.minute}},{{time.second}});
-    var curr = new Date({{curr.year}},{{curr.month}},{{curr.day}},{{curr.hour}},{{curr.minute}},{{curr.second}});
+    var curr = new Date();
+    var timeout = new Date(({{time.time}}*1000) + Date.now());
     function check() {
         idEl = document.getElementById('time');
         if (timeout > curr){
+            curr = new Date();
             var out = new Date(timeout - curr);
-            idEl.innerHTML = out.toTimeString();
+            var hours = out.getUTCHours() < 10 ? '0'+out.getUTCHours(): out.getUTCHours();
+            var minutes = out.getMinutes() < 10 ? '0'+out.getMinutes() : out.getMinutes();
+            var seconds = out.getSeconds() < 10 ? '0'+out.getSeconds() : out.getSeconds();
+            idEl.innerHTML = hours+':'+minutes+':'+seconds;
         }
         else{
             window.location = '/';

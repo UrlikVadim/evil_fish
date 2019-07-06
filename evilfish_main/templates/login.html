@@ -117,8 +117,8 @@
                     alert("Сервер отправил вам ключ для подтверждения входа");
                 }
                 else{
-                    if (xhr.status == 303) {
-                        window.location.assign(xhr.responseText);
+                    if (xhr.status >= 300 && xhr.status < 400) {
+                        window.location = xhr.responseText;
                     }
                     else{
                         alert("Неверный логин или пароль");

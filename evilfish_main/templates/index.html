@@ -17,7 +17,7 @@
         <div class="menu-button" data-offset="-100%">Обычное меню</div>
         <div class="menu-button" data-offset="-200%">Веганское меню</div>
         <div class="menu-button" data-offset="-300%">Отзывы</div>
-        <div></div>
+        <div id="space-div"></div>
         <div id="menu-element">{{logo.phones}}</div>
     </div>
     <div id="main-window">
@@ -82,12 +82,12 @@
                     {% for comm in comments %}
                     <div class="comment-block">
                         <h2>{{ comm.name }}</h2>
-                        <hr>
-                        <pre>
-                            {% for text in comm.comment %}
-                            {{ text }}<br>
-                            {% endfor %}
-                        </pre>
+                        <div style="margin: 2% 0;border-top: 1px solid #999999"></div>
+                        {% for text in comm.comment %}
+                            <pre>
+                            {{ text }}
+                            </pre>
+                        {% endfor %}
                         <h4 style="text-align:right">{{ comm.addtime|date:"d.m.Y" }}</h4>
                     </div>
                     {% endfor %}
