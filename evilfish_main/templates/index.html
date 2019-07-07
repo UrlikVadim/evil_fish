@@ -38,9 +38,15 @@
         </div>
         <div id="slide-block"><!--
             --><div class="content-page" data-id="1">
-                    <div style="margin:auto;width:30%">
+                    <div id="logo_img" style="margin:auto;width:30%">
                         <img src="static/logo.png" width="100%">
                     </div>
+                    <script>
+                    if(window.innerHeight > window.innerWidth) {
+                        document.getElementById('logo_img').style.width = "100%";
+                    }
+                    </script>
+                    <div id="logo_text">Evil fish</div>
                     {% autoescape off %}
                         {{logo.mainhtml}}
                     {% endautoescape %}
@@ -107,9 +113,9 @@
                     <div class="form-text"><div>Имя</div></div>
                     <input name="name" type="text" required>
                     <div class="form-text"><div>Почта  <small style="opacity:0.7">(не будет показана на сайте)</small></div></div>
-                    <input name="email"  type="email" required pattern="[A-Za-zА-Яа-яЁё0-9]{2,}@[A-Za-zА-Яа-яЁё0-9]{2,}.[A-Za-zА-Яа-яЁё0-9]{2,}">
+                    <input name="email"  type="email" required pattern="[а-яёА-ЯЁ\w\d\s]{2,}@[а-яёА-ЯЁ\w\d\s]{2,}\.[а-яёА-ЯЁ\w\d\s]{2,}">
                     <div class="form-text"><div>Отзыв</div></div>
-                    <textarea name="comment"></textarea>
+                    <textarea name="comment" required></textarea>
                     <div class="form-text"><div>Текст с изображения</div></div>
                     <div id="captcha-block">
                         <input name="captcha" type="text" required>
