@@ -165,11 +165,11 @@ def login(request):
                 request.session['key'] = random_generator()
                 key = request.session['key']
                 print key
-                # try:
-                #     send_mail('Вход в панель администратора', 'Ключ для подтверждения "{0}"'.format(key), 'evilkekfish@mail.ru',
-                #           [str(user.email)], fail_silently=False)
-                # except Exception as e:
-                #     return HttpResponse('Email error: {0}'.format(e.message), status=500, content_type='text/plain')
+                try:
+                    send_mail('Вход в панель администратора', 'Ключ для подтверждения "{0}"'.format(key), 'test_evilfish@mail.ru',
+                          [str(user.email)], fail_silently=False)
+                except Exception as e:
+                    return HttpResponse('Email error: {0}'.format(e.message), status=500, content_type='text/plain')
                 return HttpResponse('access', status=202, content_type='text/plain')
         except:
             request.session['admin'] = False
@@ -182,20 +182,25 @@ def sendcomment(request):
     if request.method == 'POST' and not request.session.get('sendcomm', False):
         cap = request.session.get('captcha', None)
         if cap is not None and request.POST['captcha'].upper() == cap.upper() and request.POST['captcha'] != '':
-            if re.match(r'[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+', request.POST['email']) and request.POST['name'] != '' and request.POST['comment'] != '':
-                comm = Comments()
-                comm.name = request.POST['name']
-                comm.email = request.POST['email']
-                comm.comment = request.POST['comment']
-                comm.confirm = False
-                comm.save()
-                deldate = datetime.now() - timedelta(weeks=1)
-                Comments.objects.filter(confirm=False, addtime__lte=deldate).delete()
-                # request.session['sendcomm'] = True
-                return HttpResponse('Благодарим за ваш отзыв. Он появиться после проверки администратором сайта', status=200, content_type='text/plain; charset=utf-8')
-            else:
-                return HttpResponse('Неправильная почта или поля не должны быть пустыми', status=400,
+            if not re.match(r'[\w\d\s]{2,}@[\w\d\s]{2,}\.[\w\d\s]{2,}', request.POST['email']):
+                return HttpResponse(u'Неправильная почта', status=400,
                                     content_type='text/plain; charset=utf-8')
+            if request.POST['name'] == '':
+                return HttpResponse(u'Имя не может быть пустым', status=400,
+                                    content_type='text/plain; charset=utf-8')
+            if request.POST['comment'] == '':
+                return HttpResponse(u'Комментарий не может быть пустым', status=400,
+                                    content_type='text/plain; charset=utf-8')
+            comm = Comments()
+            comm.name = request.POST['name']
+            comm.email = request.POST['email']
+            comm.comment = request.POST['comment']
+            comm.confirm = False
+            comm.save()
+            deldate = datetime.now() - timedelta(weeks=1)
+            Comments.objects.filter(confirm=False, addtime__lte=deldate).delete()
+            # request.session['sendcomm'] = True
+            return HttpResponse('Благодарим за ваш отзыв. Он появиться после проверки администратором сайта', status=200, content_type='text/plain; charset=utf-8')
         else:
             return HttpResponse('Неправильный текст с изображения', status=400, content_type='text/plain; charset=utf-8')
     else:
