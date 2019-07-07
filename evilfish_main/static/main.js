@@ -3,11 +3,15 @@ var CURRENT_WINDOW = $('#toolbar').children()[0];
 var SELECTED_CATEG = $('.categ > div')[0].firstElementChild;
 var SELECTED_CATEG_VEGAN = $('.categ > div')[1].firstElementChild;
 
+function orientation(){
+    return window.innerHeight > window.innerWidth;
+}
+
 window.native_alert = window.alert;
 window.alert = function(msg, error){
     msg = msg ? msg : 'Сервер не отвечает';
     if(error){
-        document.getElementById("msg_alert").innerHTML = '<b>Ошибка</b>' + msg.toString();
+        document.getElementById("msg_alert").innerHTML = '<b style="color:red;text-shadow: 0 3px 3px rgba(0, 0, 0, 0.8);">Ошибка</b>' + msg.toString();
     }else{
         document.getElementById("msg_alert").innerHTML = msg.toString();
     }
@@ -36,6 +40,7 @@ $('#message-box-close').click(function(e){
 function fetchProduct(id, vegan){
     var prod_view = document.getElementsByClassName('product-view');
     prod_view = (vegan) ? prod_view[1] : prod_view[0];
+    var categ = (vegan) ? SELECTED_CATEG_VEGAN.innerHTML : SELECTED_CATEG.innerHTML;
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/getproduct/'+id, true);
     xhr.onreadystatechange = function() {
@@ -43,8 +48,14 @@ function fetchProduct(id, vegan){
             return;
         }
         if (xhr.status == 200) {
+            if(orientation()){
+                prod_view.innerHTML = '<div style="font-size:3vh;font-weight:600;color:#dddddd;text-align:center;margin:2%;">'+categ+'</div>';
+            }
+            else{
+                prod_view.innerHTML = '';
+            }
             var products = new Products(this.responseText);
-            if(/Android|webOS|iPhone|iPad|iPod|pocket|psp|kindle|avantgo|blazer|midori|Tablet|Palm|maemo|plucker|phone|BlackBerry|symbian|IEMobile|mobile|ZuneWP7|Windows Phone|Opera Mini/i.test(navigator.userAgent)) {
+            if(orientation()) {
                 products.custom_sorted(2);
             }
             else{
@@ -58,7 +69,12 @@ function fetchProduct(id, vegan){
         }
 
     }
-    prod_view.innerHTML = '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
+    if(orientation()){
+        prod_view.innerHTML = '<div style="font-size:3vh;font-weight:600;color:#dddddd;text-align:center;margin:2%;">'+categ+'</div><div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
+    }
+    else{
+        prod_view.innerHTML = '<div class="lds-ring"><div></div><div></div><div></div><div></div></div>';
+    }
     xhr.send();
 }
 
@@ -122,7 +138,6 @@ Products.prototype = {
     },
     render: function(view){
         if(this.data.length){
-            view.innerHTML = "";
             for(var i = 0; i < this.data.length; i++){
                 if(this.data[i].typecomp == 'st'){
                     view.appendChild(this.standart_layout(i));
@@ -142,14 +157,19 @@ Products.prototype = {
             view.innerHTML = '<div class="nono-product"><div class="message-box-inner">Категория пуста</div></div>';
         }
     },
+    get_head_s: function(){
+        var head_s = 'text-shadow: 0 3px 3px rgba(0, 0, 0, 0.8);';
+        head_s += 'font-size:3vh;';
+        if(orientation()) {
+            head_s += 'font-size:2vh';
+        }
+        return head_s;
+    },
     standart_layout: function(i){
         var el = document.createElement('div');
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'standart_layout';
-        var head_s = 'font-size:3vh';
-        if(/Android|webOS|iPhone|iPad|iPod|pocket|psp|kindle|avantgo|blazer|midori|Tablet|Palm|maemo|plucker|phone|BlackBerry|symbian|IEMobile|mobile|ZuneWP7|Windows Phone|Opera Mini/i.test(navigator.userAgent)) {
-                head_s = 'font-size:2vh';
-        }
+        var head_s = this.get_head_s();
         var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;margin: 2% 0;';
         var el_s = 'vertical-align: middle;';
         var HTML = '<div><div>';
@@ -161,7 +181,7 @@ Products.prototype = {
             for(var j =0; j < this.data[i].price.length; j++){
                 var price = this.data[i].price[j].split(' ');
                 var pr = price.pop()
-                HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="color:red;'+el_s+'">'+pr+'</span></div>';
+                HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.8);color:red;'+el_s+'">'+pr+'</span></div>';
             }
         }
         else{
@@ -171,7 +191,7 @@ Products.prototype = {
             for(var j =0; j < this.data[i].price.length; j++){
                 var price = this.data[i].price[j].split(' ');
                 var pr = price.pop()
-                HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="color:red;'+el_s+'">'+pr+'</span></div>';
+                HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.8);color:red;'+el_s+'">'+pr+'</span></div>';
             }
         }
         HTML += '</div></div>';
@@ -182,10 +202,7 @@ Products.prototype = {
         var el = document.createElement('div');
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'dual_layout';
-        var head_s = 'font-size:3vh';
-        if(/Android|webOS|iPhone|iPad|iPod|pocket|psp|kindle|avantgo|blazer|midori|Tablet|Palm|maemo|plucker|phone|BlackBerry|symbian|IEMobile|mobile|ZuneWP7|Windows Phone|Opera Mini/i.test(navigator.userAgent)) {
-            head_s = 'font-size:2vh';
-        }
+        var head_s = this.get_head_s();
         var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;margin: 2% 0;';
         var el_s = 'vertical-align: middle;';
         var HTML  = '<div><div>';
@@ -200,7 +217,7 @@ Products.prototype = {
         for(var j =0; j < this.data[i].price.length; j++){
             var price = this.data[i].price[j].split(' ');
             var pr = price.pop()
-            HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="color:red;'+el_s+'">'+pr+'</span></div>';
+            HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.8);color:red;'+el_s+'">'+pr+'</span></div>';
         }
         HTML += '</div><div style="display:inline-block;width:46%;vertical-align:top;padding:0.5% 2%;border-top: 1px solid #999999">';
         HTML += this.data[i].description;
@@ -212,10 +229,7 @@ Products.prototype = {
         var el = document.createElement('div');
         el.style.setProperty('animation-delay', (i*100)+'ms', "important");
         el.className = 'dual_layout';
-        var head_s = 'font-size:3vh';
-        if(/Android|webOS|iPhone|iPad|iPod|pocket|psp|kindle|avantgo|blazer|midori|Tablet|Palm|maemo|plucker|phone|BlackBerry|symbian|IEMobile|mobile|ZuneWP7|Windows Phone|Opera Mini/i.test(navigator.userAgent)) {
-            head_s = 'font-size:2vh';
-        }
+        var head_s = this.get_head_s();
         var con_s = 'display: -webkit-flex;display: flex; justify-content:space-between; align-items: center;margin: 4% 0;';
         var el_s = 'vertical-align: middle;';
         var HTML  = '<div><div>';
@@ -227,7 +241,7 @@ Products.prototype = {
         for(var j =0; j < this.data[i].price.length; j++){
             var price = this.data[i].price[j].split(' ');
             var pr = price.pop()
-            HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="color:red;'+el_s+'">'+pr+'</span></div>';
+            HTML += '<div style="'+con_s+'"><span style="'+el_s+'">'+price.join(' ')+'</span><span style="text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.8);color:red;'+el_s+'">'+pr+'</span></div>';
         }
         HTML += '</div></div></div>';
         el.innerHTML = HTML;
@@ -239,17 +253,24 @@ Products.prototype = {
 window.onload = function(){
     // обработчик выбора вкладок
     $('#toolbar').click(function(e){
-        if(e.target.classList.contains("menu-button") && CURRENT_WINDOW != e.target){
+        if(e.target.classList.contains("menu-button") ){
             CURRENT_WINDOW.classList.remove('menu-button-clicked');
             e.target.classList.add('menu-button-clicked');
+            if(CURRENT_WINDOW != e.target){
+                $('.content-page, .product-view').css('overflow', 'hidden');
+            }
             CURRENT_WINDOW = e.target;
-            $('.content-page, .product-view').css('overflow', 'hidden');
+            if(orientation()){
+                $('.product-view').html('');
+                $('.categ').css('display', 'block');
+            }
             $('#slide-block').animate(
             {
                 left: e.target.dataset.offset
             },
             400,
             function(){
+
                 $('.content-page, .product-view').css('overflow', 'auto');
             }
             );
@@ -267,11 +288,16 @@ window.onload = function(){
             else{
                 SELECTED_CATEG = e.target;
             }
+            if(orientation()){
+                $('.categ').css('display', 'none');
+            }
             fetchProduct(e.target.dataset.id, 1*this.dataset.vegan);
         }
 
     });
-    $(SELECTED_CATEG).click();
-    $(SELECTED_CATEG_VEGAN).click();
+    if(!orientation()){
+        $(SELECTED_CATEG).click();
+        $(SELECTED_CATEG_VEGAN).click();
+    }
 
 }

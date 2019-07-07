@@ -46,8 +46,13 @@ $('#comment-send').click(function(e){
             alert('Имя не может быть пустым',true);
             return false;
         }
-        if(formData.get('email') == ''){
+        var mail = formData.get('email');
+        if(mail == ''){
             alert('Почта не может быть пустым',true);
+            return false;
+        }
+        if(!(mail.search(/[а-яёА-ЯЁ\w\d\s]{2,}@[а-яёА-ЯЁ\w\d\s]{2,}\.[а-яёА-ЯЁ\w\d\s]{2,}/i)+1)){
+            alert('Некорректная почта',true);
             return false;
         }
         if(formData.get('comment') == ''){
