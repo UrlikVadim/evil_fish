@@ -1,3 +1,8 @@
 # Evil_fish
-<h2>Food delivery in Krymsk - Evil Fish</h2>
-<img src="gif/logo.png">
+Food delivery in Krymsk - Evil Fish
+=====================
+Main page
+---------------------
+![screenshot of sample](gif/logo.png)
+toolbar
+---------------------
