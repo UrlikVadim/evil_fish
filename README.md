@@ -1,6 +1,6 @@
 # Evil_fish
-Food delivery in Krymsk - Evil Fish
-=====================
+Food delivery in Krymsk
+---------------------
 Main page
 ---------------------
 ![screenshot of sample](gif/logo.png)
