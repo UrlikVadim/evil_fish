@@ -33,7 +33,7 @@ def getCategory(request):
     return JsonResponse({"data": out})
 
 
-def getProduct(request):
+def getProduct(request): # TODO delete image
     if request.GET.get('category', None) is not None:
         out = list(Product.objects.filter(category=request.GET['category']).values())
     else:
@@ -79,9 +79,9 @@ def setCategory(request):
             products = Product.objects.filter(category=idCat)
             for prod in products:
                 if prod.imageurl != "":
-                    urlpath = "evilfish_admin/static/images/"
-                    if os.path.exists(urlpath + prod.imageurl):
-                        os.remove(urlpath + prod.imageurl)
+                    urlpath = os.path.join("evilfish_admin", "static", "images", prod.imageurl)
+                    if os.path.exists(urlpath):
+                        os.unlink(urlpath)
                 prod.delete()
             delCategory.delete()
             return HttpResponse('Удаление успешшно', content_type='text/plain; charset=utf-8')
@@ -119,12 +119,13 @@ def setProduct(request):
             idProd = int(request.POST['id'])
             prod = Product.objects.get(pk=idProd)
             if prod.imageurl != "":
-                urlpath = "evilfish_admin/static/images/"
-                if os.path.exists(urlpath+prod.imageurl):
-                    os.remove(urlpath+prod.imageurl)
+                urlpath = os.path.join("evilfish_admin", "static", "images", prod.imageurl)
+                if os.path.exists(urlpath):
+                    os.unlink(urlpath)
+                else:
+                    return HttpResponse('Ошибка удаления: {0}: {1}'.format(urlpath, os.getcwd()), content_type='text/plain; charset=utf-8')
             prod.delete()
-            return HttpResponse(''
-                                'Удаление продукта успешшно', content_type='text/plain; charset=utf-8')
+            return HttpResponse('Удаление продукта успешшно', content_type='text/plain; charset=utf-8')
         elif request.POST['typeOperation'] == "vis":
             idProd = int(request.POST['id'])
             prod = Product.objects.get(pk=idProd)
@@ -144,19 +145,21 @@ def setFile(request):
                 if request.FILES['imageurl'].name.lower().endswith('.png'):
                     nameOut = hashlib.md5(bytes(str(datetime.datetime.today()) + "evilfish"))
                     nameOut = nameOut.hexdigest()+".png"
-                    path = os.sep.join(["D:","develop","evilfish","evilfish_project","evilfish_admin", "static", "images", nameOut])
+                    path = os.path.join("evilfish_admin", "static", "images", nameOut)
                     with open(path, 'wb+') as destination:
                         destination.write(request.FILES['imageurl'].read())
                     img = Image.open(path)
                     width, height = img.size
-                    if height >= width:
+                    print img.size
+                    if float(width) / float(height) <= 1.6:
                         new_width = int(round(height * 1.6, 0))
                         new_height = height
                     else:
                         new_width = width
                         new_height = int(round(width / 1.6, 0))
                     new_img = Image.new('RGBA', (new_width, new_height))
-                    if height >= width:
+                    print new_img.size
+                    if float(width) / float(height) <= 1.6:
                         new_img.paste(img, (int(round((new_width-width)/2, 0)), 0))
                     else:
                         new_img.paste(img, (0, int(round((new_height-height)/2, 0))))
@@ -178,8 +181,7 @@ def setFile(request):
                 return JsonResponse({"success": False, "msg": "Файл не выбран"})
         elif request.POST['typeOperation'] == "del":
             if request.POST.get('imageurl', False):
-                path = os.sep.join(
-                    ["D:", "develop", "evilfish", "evilfish_project", "evilfish_admin", "static", "images", request.POST['imageurl']])
+                path = os.path.join("evilfish_admin", "static", "images", request.POST['imageurl'])
                 if request.POST.get('change_product') == "upd":
                     idProd = int(request.POST['product_id'])
                     prod = Product.objects.get(pk=idProd)
