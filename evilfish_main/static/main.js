@@ -212,7 +212,7 @@ Products.prototype = {
         else{
             HTML += '<b style="'+head_s+';">'+this.data[i].title+'</b>';
         }
-        HTML += this.data[i].imageurl != '' ? '<div style="margin:auto;width:78%"><img width="100%" src="static/images/'+this.data[i].imageurl+'"></div>': '<br>';
+        HTML += this.data[i].imageurl != '' ? '<div style="margin:auto;width:60%"><img width="100%" src="static/images/'+this.data[i].imageurl+'"></div>': '<br>';
         HTML += '<div style="display:inline-block;width:45%;height:100%;vertical-align:top;padding:0 2%;border-right: 1px solid #999999;border-top: 1px solid #999999">';
         for(var j =0; j < this.data[i].price.length; j++){
             var price = this.data[i].price[j].split(' ');
