@@ -165,11 +165,11 @@ def login(request):
                 request.session['key'] = random_generator()
                 key = request.session['key']
                 print key
-                try:
-                    send_mail('Вход в панель администратора', 'Ключ для подтверждения "{0}"'.format(key), 'test_evilfish@mail.ru',
-                          [str(user.email)], fail_silently=False)
-                except Exception as e:
-                    return HttpResponse('Email error: {0}'.format(e.message), status=500, content_type='text/plain')
+                # try:
+                #     send_mail('Вход в панель администратора', 'Ключ для подтверждения "{0}"'.format(key), 'testevilfish@yandex.ru',
+                #           [str(user.email)], fail_silently=False)
+                # except Exception as e:
+                #     return HttpResponse('Email error: {0}'.format(e), status=500, content_type='text/plain')
                 return HttpResponse('access', status=202, content_type='text/plain')
         except:
             request.session['admin'] = False
