@@ -1,19 +1,18 @@
-![](gif/1toolbar.gif)
 # Evil_fish
 Food delivery in Krymsk
 ---------------------
-Main page
+Main menu
 ---------------------
-![screenshot of sample](gif/logo.png)
-Menu
+<a href="gif/1toolbar .gif"><img src="gif/1toolbar .gif" title="toolbar"/></a>
+
+Categories
 ---------------------
-![screenshot of sample](gif/menu.png)
+<a href="gif/2categ .gif"><img src="gif/2categ .gif" title="categories"/></a>
+
 Comments
 ---------------------
-![screenshot of sample](gif/comment.png)
-Set comment
----------------------
-![screenshot of sample](gif/setcomment.png)
+<a href="gif/3set.gif"><img src="gif/3set.gif" title="comment"/></a>
+
 Login in adminpanel
 ---------------------
 ![screenshot of sample](gif/login.png)
