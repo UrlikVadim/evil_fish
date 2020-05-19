@@ -84,6 +84,10 @@ def plazma(width, height):
 
 
 def plazmaRec(pix, x1, y1, x2, y2):
+    x1 = int(x1)
+    x2 = int(x2)
+    y1 = int(y1)
+    y2 = int(y2)
     if (abs(x1 - x2) <= 1) and (abs(y1 - y2) <= 1):
         return
 
@@ -103,20 +107,21 @@ def plazmaRec(pix, x1, y1, x2, y2):
                 tmp += delta
                 break
         rgb.append(tmp)
+    nx = int((x1 + x2) / 2)
+    ny = int((y1 + y2) / 2)
+    pix[x1, ny] = (int(rgb[0]), int(rgb[5]), int(rgb[10]))
+    pix[x2, ny] = (int(rgb[1]), int(rgb[6]), int(rgb[11]))
+    pix[nx, y1] = (int(rgb[2]), int(rgb[7]), int(rgb[12]))
+    pix[nx, y2] = (int(rgb[3]), int(rgb[8]), int(rgb[13]))
+    pix[nx, ny] = (int(rgb[4]), int(rgb[9]), int(rgb[14]))
 
-    pix[x1, (y1 + y2) / 2] = (rgb[0], rgb[5], rgb[10])
-    pix[x2, (y1 + y2) / 2] = (rgb[1], rgb[6], rgb[11])
-    pix[(x1 + x2) / 2, y1] = (rgb[2], rgb[7], rgb[12])
-    pix[(x1 + x2) / 2, y2] = (rgb[3], rgb[8], rgb[13])
-    pix[(x1 + x2) / 2, (y1 + y2) / 2] = (rgb[4], rgb[9], rgb[14])
-
-    plazmaRec(pix, x1, y1, (x1 + x2) / 2, (y1 + y2) / 2)
-    plazmaRec(pix, (x1 + x2) / 2, y1, x2, (y1 + y2) / 2)
-    plazmaRec(pix, x1, (y1 + y2) / 2, (x1 + x2) / 2, y2)
-    plazmaRec(pix, (x1 + x2) / 2, (y1 + y2) / 2, x2, y2)
+    plazmaRec(pix, x1, y1, (x1 + x2) // 2, (y1 + y2) // 2)
+    plazmaRec(pix, (x1 + x2) // 2, y1, x2, (y1 + y2) // 2)
+    plazmaRec(pix, x1, (y1 + y2) // 2, (x1 + x2) // 2, y2)
+    plazmaRec(pix, (x1 + x2) // 2, (y1 + y2) // 2, x2, y2)
 
 @csrf_protect
-def getcaptcha(request):  # TODO many requests
+def getcaptcha(request):
     if not request.session.get('sendcomm', False):
         if not request.session.get('gencaptcha', False):
             request.session['gencaptcha'] = True
@@ -157,14 +162,14 @@ def login(request):
         passw = request.POST.get('pass', '')
         ekey = request.POST.get('key', '')
         try:
-            user = Admins.objects.get(login=login, passw=hashlib.md5(passw).hexdigest())
+            user = Admins.objects.get(login=login, passw=hashlib.md5(passw.encode()).hexdigest())
             if ekey != '' and str(ekey).upper() == request.session.get('key', None):
                 request.session['admin'] = True
                 return HttpResponse('/admin', status=303, content_type='text/plain')
             else:
                 request.session['key'] = random_generator()
                 key = request.session['key']
-                print key
+                print(key)
                 # try:
                 #     send_mail('Вход в панель администратора', 'Ключ для подтверждения "{0}"'.format(key), 'testevilfish@yandex.ru',
                 #           [str(user.email)], fail_silently=False)

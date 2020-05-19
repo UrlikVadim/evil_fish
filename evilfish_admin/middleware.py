@@ -23,8 +23,6 @@ class SpamRequestBlock(MiddlewareMixin):
                 request.session['counter'] += 1
             else:
                 request.session['counter'] = 0
-            if request.session.get('gencaptcha', False) and request.path_info == '/getcaptcha':
-                return HttpResponse('generation captcha not finish', status=429, content_type='text/plain')
             request.session['prev_path'] = request.path_info
             if request.session['counter'] >= 5 and not request.session.get('admin', False):
                 timeout = datetime.now() + timedelta(seconds=request.session['counter']*10)

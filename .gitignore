@@ -1,0 +1,5 @@
+/evilfish_admin/static/admin/ext-6.2.0/
+/evilfish_admin/static/images/
+migrations/
+__pycache__/
+*.pyc

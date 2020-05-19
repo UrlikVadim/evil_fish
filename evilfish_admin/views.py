@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from models import Logo, Category, Product, Comments
+from .models import Logo, Category, Product, Comments
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import hashlib
 import datetime
@@ -143,14 +143,13 @@ def setFile(request):
         if request.POST['typeOperation'] == "add":
             if request.FILES.get('imageurl', False):
                 if request.FILES['imageurl'].name.lower().endswith('.png'):
-                    nameOut = hashlib.md5(bytes(str(datetime.datetime.today()) + "evilfish"))
+                    nameOut = hashlib.md5(str(str(datetime.datetime.today()) + "evilfish").encode())
                     nameOut = nameOut.hexdigest()+".png"
                     path = os.path.join("evilfish_admin", "static", "images", nameOut)
                     with open(path, 'wb+') as destination:
                         destination.write(request.FILES['imageurl'].read())
                     img = Image.open(path)
                     width, height = img.size
-                    print img.size
                     if float(width) / float(height) <= 1.6:
                         new_width = int(round(height * 1.6, 0))
                         new_height = height
@@ -158,7 +157,7 @@ def setFile(request):
                         new_width = width
                         new_height = int(round(width / 1.6, 0))
                     new_img = Image.new('RGBA', (new_width, new_height))
-                    print new_img.size
+                    # print new_img.size
                     if float(width) / float(height) <= 1.6:
                         new_img.paste(img, (int(round((new_width-width)/2, 0)), 0))
                     else:

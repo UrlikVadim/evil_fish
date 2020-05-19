@@ -49,7 +49,7 @@ class Comments(models.Model):
     name = models.TextField()
     comment = models.TextField()
     email = models.EmailField()
-    visible = models.BooleanField()
+    visible = models.BooleanField(default=False)
     confirm = models.BooleanField(default=False)
     addtime = models.DateTimeField(auto_now_add=True)
 

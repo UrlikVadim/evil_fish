@@ -252,6 +252,8 @@ Products.prototype = {
 
 window.onload = function(){
     // обработчик выбора вкладок
+    $('#video-foreground').css('filter', 'blur(10px)');
+    $('#video-foreground').css('filter', 'blur(0px)');
     $('#toolbar').click(function(e){
         if(e.target.classList.contains("menu-button") ){
             CURRENT_WINDOW.classList.remove('menu-button-clicked');
@@ -263,6 +265,14 @@ window.onload = function(){
             if(orientation()){
                 $('.product-view').html('');
                 $('.categ').css('display', 'block');
+            }
+            else{
+                if(e.target.dataset.offset == '0'){
+                     $('#video-foreground').css('filter', 'blur(0px)');
+                }
+                else{
+                     $('#video-foreground').css('filter', 'blur(10px)');
+                }
             }
             $('#slide-block').animate(
             {
